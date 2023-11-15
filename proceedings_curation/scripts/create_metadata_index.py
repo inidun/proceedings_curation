@@ -24,7 +24,7 @@ def create_metadata_index(proceedings_index: str | os.PathLike, metadata_index: 
             'Record number': 'uint32',
             'Publication date': 'uint16',
             'Conference date ': 'Int64',
-            # 'Volume': 'Int64',  # TODO: Fix index
+            'Volume': 'Int64',
             'Chapter': 'category',
         },
     )
