@@ -5,19 +5,19 @@ from loguru import logger
 import typer
 
 
-def create_metadata_index(proceedings_index: str | os.PathLike, metadata_index: str | os.PathLike) -> pd.DataFrame:
-    """Combine and update proceedings and metadata indexes
+def create_metadata_index(proceedings_index: str | os.PathLike, proceedings_metadata: str | os.PathLike) -> pd.DataFrame:
+    """Create metadata index by merging and updating `proceedings_index` and `proceedings_metadata`
 
     Args:
         proceedings_index (str | os.PathLike): Path to proceedings index
-        metadata_index (str | os.PathLike): Path to metadata index
+        proceedings_metadata (str | os.PathLike): Path to proceedings metadata
 
     Returns:
-        pd.DataFrame: Combined and updated index of proceedings and metadata
+        pd.DataFrame: Merged and updated index of `proceedings_index` and `proceedings_metadata`
     """
 
     # Load proceedings index
-    logger.info(f'Loading Proceedings index: "{proceedings_index}"')
+    logger.info(f'Loading proceedings index: "{proceedings_index}"')
     idxp = pd.read_excel(
         proceedings_index,
         dtype={
@@ -47,18 +47,18 @@ def create_metadata_index(proceedings_index: str | os.PathLike, metadata_index: 
     ):
         logger.error(f"Dates out of range\n{invalid_dates[['record_number', 'title_meeting', 'date_meeting']]}")
 
-    # Load metadata index
-    logger.info(f'Loading Metadata index: "{metadata_index}"')
+    # Load proceedings metadata
+    logger.info(f'Loading proceedings metadata: "{proceedings_metadata}"')
     idxm = pd.read_excel(
-        metadata_index,
+        proceedings_metadata,
         usecols=['record_number', 'year', 'filename', 'columns'],
         dtype={'record_number': 'uint32', 'year': 'uint16', 'columns': 'uint8'},
     )
     idxm['filename'] = idxm['year'].astype(str) + '_' + idxm['filename'].astype(str) + '.pdf'
     idxm.drop(['year'], axis='columns', inplace=True)
 
-    # Merge proceedings and metadate indexes
-    logger.info('Merging Proceedings and Metadata indexes')
+    # Merge proceedings index and proceedings metadata
+    logger.info('Merging proceedings index and proceedings metadata')
     idx = idxp.merge(idxm.set_index('record_number'), how='left', left_on='record_number', right_index=True)
     # fmt: off
     idx['meeting_name_id'] = idx['record_number'].astype(str) + '_' + idx['title_meeting'].str.replace(' ', '_').str.lower()
@@ -101,15 +101,15 @@ def save_metadata_index(idx: pd.DataFrame, filename: str | os.PathLike) -> None:
     logger.info(f'Saved index: "{filename}"')
 
 
-def main(proceedings_index: str, metadata_index: str, filename: str) -> None:
-    """Combine and update proceedings and metadata indexes
+def main(proceedings_index: str, proceedings_metadata: str, filename: str) -> None:
+    """Create metadata index by merging and updating `proceedings_index` and `proceedings_metadata`
 
     Args:
         proceedings_index (str | os.PathLike): Path to proceedings index
-        metadata_index (str | os.PathLike): Path to metadata index
-        filename (str | os.PathLike): Path to save index
+        metadata_index (str | os.PathLike): Path to proceedings metadata
+        filename (str | os.PathLike): Path to save metadata index
     """
-    idx = create_metadata_index(proceedings_index, metadata_index)
+    idx = create_metadata_index(proceedings_index, proceedings_metadata)
     save_metadata_index(idx, filename)
 
 if __name__ == '__main__':
