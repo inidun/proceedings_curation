@@ -5,7 +5,9 @@ from loguru import logger
 import typer
 
 
-def create_metadata_index(proceedings_index: str | os.PathLike, proceedings_metadata: str | os.PathLike) -> pd.DataFrame:
+def create_metadata_index(
+    proceedings_index: str | os.PathLike, proceedings_metadata: str | os.PathLike
+) -> pd.DataFrame:
     """Create metadata index by merging and updating `proceedings_index` and `proceedings_metadata`
 
     Args:
@@ -111,6 +113,7 @@ def main(proceedings_index: str, proceedings_metadata: str, filename: str) -> No
     """
     idx = create_metadata_index(proceedings_index, proceedings_metadata)
     save_metadata_index(idx, filename)
+
 
 if __name__ == '__main__':
     typer.run(main)
