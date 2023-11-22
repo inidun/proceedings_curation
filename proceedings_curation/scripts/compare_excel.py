@@ -42,10 +42,12 @@ def compare_excel(old: str, new: str, report: str) -> None:
     changes = changes.swaplevel(axis='columns')[new.columns[0:]]
     changed = changes.groupby(level=0, axis='columns').apply(lambda frame: frame.apply(report_diff, axis='columns'))
     changed_text_columns = changed.select_dtypes(include='object')
-    diff = changed_text_columns[changed_text_columns.apply(lambda x: x.str.contains('--->') == True, axis='columns')] # pylint: disable=singleton-comparison
+    diff = changed_text_columns[
+        changed_text_columns.apply(lambda x: x.str.contains('--->') == True, axis='columns')
+    ]  # pylint: disable=singleton-comparison
     diff = diff.dropna(how='all').dropna(axis='columns', how='all')
 
-    with pd.ExcelWriter(report, engine='xlsxwriter') as writer: # pylint: disable=abstract-class-instantiated
+    with pd.ExcelWriter(report, engine='xlsxwriter') as writer:  # pylint: disable=abstract-class-instantiated
         changed = changed.reindex(columns=old.columns.to_list())  # Move
         changed.to_excel(writer, index=True, sheet_name='changed')
         diff.to_excel(writer, index=True, sheet_name='diff')
@@ -69,4 +71,3 @@ def compare_excel(old: str, new: str, report: str) -> None:
 
 if __name__ == '__main__':
     typer.run(compare_excel)
-

@@ -19,6 +19,7 @@ def test_tesseract_version():
 def mock_text():
     return "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 
+
 @pytest.fixture
 def mock_pdf_file(tmpdir, mock_text):
     # Text content for the PDF
@@ -54,4 +55,3 @@ def test_tesseract_extractor_mod_returns_expected_output(mock_pdf_file, mock_tex
 
     assert tmpdir.join('test.txt').exists()
     assert tmpdir.join('test.txt').read().rstrip() == expected
-
