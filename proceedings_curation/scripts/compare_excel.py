@@ -36,7 +36,7 @@ def compare_excel(old: str, new: str, report: str) -> None:
         Returns:
             str: Difference between two cells
         """
-        return x[0] if x[0] == x[1] else f'{x[0]} ---> {x[1]}'
+        return x.iloc[0] if x.iloc[0] == x.iloc[1] else f'{x.iloc[0]} ---> {x.iloc[1]}'
 
     changes = changes.swaplevel(axis='columns')[new.columns[0:]]
     changed = changes.groupby(level=0, axis='columns').apply(lambda frame: frame.apply(report_diff, axis='columns'))
