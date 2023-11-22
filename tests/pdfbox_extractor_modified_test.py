@@ -1,6 +1,7 @@
-from proceedings_curation.pdfbox_extractor_modified import PDFBoxExtractorMod
 import pytest
 from fpdf import FPDF
+
+from proceedings_curation.pdfbox_extractor_modified import PDFBoxExtractorMod
 
 
 @pytest.fixture

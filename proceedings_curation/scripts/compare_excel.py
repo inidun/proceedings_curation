@@ -1,8 +1,9 @@
 from typing import Any
+
 import pandas as pd
-from loguru import logger
 import typer
 import xlsxwriter
+from loguru import logger
 
 
 def compare_excel(old: str, new: str, report: str) -> None:

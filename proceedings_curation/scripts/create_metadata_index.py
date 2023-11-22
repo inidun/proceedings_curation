@@ -1,8 +1,8 @@
 import os
-import pandas as pd
 
-from loguru import logger
+import pandas as pd
 import typer
+from loguru import logger
 
 
 def create_metadata_index(

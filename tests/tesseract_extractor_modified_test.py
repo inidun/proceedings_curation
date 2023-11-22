@@ -1,8 +1,8 @@
-from proceedings_curation.tesseract_extractor_modified import TesseractExtractorMod
-
+import pytesseract
 import pytest
 from fpdf import FPDF
-import pytesseract
+
+from proceedings_curation.tesseract_extractor_modified import TesseractExtractorMod
 
 
 def test_tesseract_language_support():
