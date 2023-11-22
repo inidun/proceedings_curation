@@ -26,12 +26,26 @@ pylint = "^3.0.2"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-
 [tool.black]
 line-length = 120
 skip-string-normalization = true
 target-version = ["py311"]
 
+[tool.mypy]
+python_version = "3.11"
+allow_redefinition = true
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+show_error_codes = true
+show_column_numbers = true
+pretty = false
+
+[[tool.mypy.overrides]]
+module = 'tests.*'
+disallow_untyped_defs = false
 
 [tool.pylint.main]
 exit-zero = true
