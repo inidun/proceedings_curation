@@ -21,7 +21,7 @@ def mock_pdf_file(tmpdir, text_content):
     pdf.set_font("Arial", size=12)
 
     # Add the text content to the page
-    pdf.cell(0, 10, txt=text_content, ln=True)
+    pdf.cell(0, 10, text=text_content, ln=True)
 
     # Path to the mock PDF file
     mock_file_path = tmpdir.join("test.pdf")
