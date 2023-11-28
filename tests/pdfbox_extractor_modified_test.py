@@ -4,16 +4,13 @@ from fpdf import FPDF
 from proceedings_curation.pdfbox_extractor_modified import PDFBoxExtractorMod
 
 
-@pytest.fixture
+@pytest.fixture(name='text_content')
 def mock_text():
     return "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 
 
-@pytest.fixture
-def mock_pdf_file(tmpdir, mock_text):
-    # Text content for the PDF
-    text_content = mock_text
-
+@pytest.fixture(name='pdf_file')
+def mock_pdf_file(tmpdir, text_content):
     # Create a new PDF document
     pdf = FPDF()
 
@@ -35,12 +32,12 @@ def mock_pdf_file(tmpdir, mock_text):
     return mock_file_path
 
 
-def test_pdfbox_extractor_mod_returns_expected_output(mock_pdf_file, mock_text, tmpdir):
-    assert mock_pdf_file.exists()
-    expected = mock_text
+def test_pdfbox_extractor_mod_returns_expected_output(pdf_file, text_content, tmpdir):
+    assert pdf_file.exists()
+    expected = text_content
     extractor = PDFBoxExtractorMod()
 
-    extractor.extract_text(mock_pdf_file, output_folder=tmpdir)
+    extractor.extract_text(pdf_file, output_folder=tmpdir)
 
     assert tmpdir.join('test.txt').exists()
     assert tmpdir.join('test.txt').read().rstrip() == expected
