@@ -102,3 +102,9 @@ never-returning-functions = ["sys.exit", "argparse.parse_error"]
 [tool.pylint.reports]
 output-format = "colorized"
 score = false
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    'ignore:\nPyarrow:DeprecationWarning',
+    "ignore::DeprecationWarning"
+]
