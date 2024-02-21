@@ -34,7 +34,10 @@ lint: tidy pylint
 typing: lint mypy
 .PHONY: typing
 
-
 create_metadata:
 	@poetry run python proceedings_curation/scripts/create_metadata_index.py $(PROCEEDINGS_INDEX) $(PROCEEDINGS_METADATA) $(METADATA_INDEX)
 .PHONY: create_metadata
+
+create_metadata_csv:
+	@poetry run python proceedings_curation/scripts/create_metadata_index.py $(PROCEEDINGS_INDEX) $(PROCEEDINGS_METADATA) $(METADATA_INDEX_CSV)
+.PHONY: create_metadata_csv
