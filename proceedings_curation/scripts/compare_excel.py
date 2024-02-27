@@ -43,7 +43,7 @@ def compare_excel(old: str, new: str, report: str) -> None:
     changed = changes.groupby(level=0, axis='columns').apply(lambda frame: frame.apply(report_diff, axis='columns'))
     changed_text_columns = changed.select_dtypes(include='object')
     diff = changed_text_columns[
-        changed_text_columns.apply(lambda x: x.str.contains('--->') is True, axis='columns')
+        changed_text_columns.apply(lambda x: x.str.contains('--->', na=False).any(), axis='columns')
     ]  # pylint: disable=singleton-comparison
     diff = diff.dropna(how='all').dropna(axis='columns', how='all')
 
