@@ -41,3 +41,8 @@ create_metadata:
 create_metadata_csv:
 	@poetry run python proceedings_curation/scripts/create_metadata_index.py $(PROCEEDINGS_INDEX) $(PROCEEDINGS_METADATA) $(METADATA_INDEX_CSV)
 .PHONY: create_metadata_csv
+
+extract_meetings: export PYTHONPATH=.
+extract_meetings:
+	@poetry run python proceedings_curation/scripts/extract_meetings.py $(METADATA_INDEX) $(PROCEEDINGS_PDF_CORPUS_PATH) $(PROCEEDINGS_MEETINGS_CORPUS_PATH)
+.PHONY: extract_meetings
