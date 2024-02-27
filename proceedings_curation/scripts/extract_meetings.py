@@ -120,7 +120,7 @@ def load_index(metadata_index: str | os.PathLike) -> pd.DataFrame:
         dtype={
             'record_number': 'uint32',
             'publication_date': 'uint16',
-            # 'conference_date': 'uint16',  # FIXME: Empty values
+            'conference_date': 'uint16',
             'columns': 'uint8',
             'first_page': 'uint16',
             'last_page': 'uint16',
