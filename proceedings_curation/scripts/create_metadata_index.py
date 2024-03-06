@@ -53,15 +53,31 @@ def create_metadata_index(
     logger.info(f'Loading proceedings metadata: "{proceedings_metadata}"')
     idxm = pd.read_excel(
         proceedings_metadata,
-        usecols=['record_number', 'year', 'filename', 'columns'],
-        dtype={'record_number': 'uint32', 'year': 'uint16', 'columns': 'uint8'},
+        usecols=['record_number', 'year', 'filename', 'columns', 'volume'],
+        dtype={'record_number': 'uint32', 'year': 'uint16', 'columns': 'uint8', 'volume': 'Int64'},
     )
     idxm['filename'] = idxm['year'].astype(str) + '_' + idxm['filename'].astype(str) + '.pdf'
     idxm.drop(['year'], axis='columns', inplace=True)
 
     # Merge proceedings index and proceedings metadata
     logger.info('Merging proceedings index and proceedings metadata')
-    idx = idxp.merge(idxm.set_index('record_number'), how='left', left_on='record_number', right_index=True)
+
+    # Fill null values with a placeholder
+    idxp['volume'] = idxp['volume'].fillna(-1)
+    idxm['volume'] = idxm['volume'].fillna(-1)
+
+    # Perform the merge
+    idx = idxp.merge(
+        idxm.set_index(['record_number', 'volume']), how='left', left_on=['record_number', 'volume'], right_index=True
+    )
+
+    # Replace the placeholder with null values again
+    idx['volume'] = idx['volume'].replace(-1, pd.NA)
+
+    # check that all idx has same length as idxp
+    if len(idx) != len(idxp):
+        logger.error(f'Length of merged index ({len(idx)}) does not match length of proceedings index ({len(idxp)})')
+
     # fmt: off
     idx['meeting_name_id'] = idx['record_number'].astype(str) + '_' + idx['title_meeting'].str.replace(' ', '_').str.lower()
     idx['meeting_id'] = idx['record_number'].astype(str) + idx.groupby(['record_number']).cumcount().astype(str).str.pad(4, side='left', fillchar='0')
