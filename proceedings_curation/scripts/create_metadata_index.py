@@ -31,8 +31,21 @@ def create_metadata_index(
         },
     )
 
+    pd.set_option('future.no_silent_downcasting', True)
+    idxp = idxp.infer_objects(copy=False)
+
     # Strip and lowercase column names
     idxp.columns = idxp.columns.str.strip().str.replace(' ', '_').str.lower()
+
+    if idxp['pages_in_pdf'].str.strip().str.endswith('-').fillna(False).any():
+        logger.error(
+            f"Trailing '-' in 'pages_in_pdf' column\n{idxp[idxp['pages_in_pdf'].str.strip().str.endswith('-').fillna(False)]['pages_in_pdf']}"
+        )
+
+    if idxp['pages_in_doc'].str.strip().str.endswith('-').fillna(False).any():
+        logger.error(
+            f"Trailing '-' in 'pages_in_doc' column\n{idxp[idxp['pages_in_doc'].str.strip().str.endswith('-').fillna(False)]['pages_in_doc']}"
+        )
 
     # Date to datetime
     idxp['date_meeting'] = pd.to_datetime(idxp['date_meeting'], errors='coerce')
