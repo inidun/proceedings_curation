@@ -98,7 +98,7 @@ def create_metadata_index(
 
     idx['meeting_id'] = idx['meeting_id'].astype(int)
 
-    idx['pages'] = idx['pages_in_pdf'].astype(str).str.strip().str.rstrip('-')  # NOTE: Errors in index: trailing '-'
+    idx['pages'] = idx['pages_in_pdf'].astype(str).str.strip()
     idx['pages'] = idx['pages'].str.split('-').str.get(0) + '-' + idx['pages'].str.split('-').str.get(-1)
     if idx['pages'].isnull().sum() > 0:
         logger.warning("Null values in 'pages' column")
