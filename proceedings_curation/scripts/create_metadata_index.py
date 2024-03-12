@@ -104,6 +104,11 @@ def create_metadata_index(
         logger.warning("Null values in 'pages' column")
     idx[['first_page', 'last_page']] = idx['pages'].str.split('-', n=1, expand=True).astype('uint16')
 
+    if (idx['last_page'] < idx['first_page']).any():
+        logger.error(
+            f"Last page smaller than first page\n{idx[idx['last_page'] < idx['first_page']][['record_number', 'title_meeting', 'pages']]}"
+        )
+
     idx['language_codes'] = (
         idx.languages.str.replace('|', ' ')
         .str.strip()
