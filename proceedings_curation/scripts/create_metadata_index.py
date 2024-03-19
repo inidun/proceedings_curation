@@ -68,7 +68,9 @@ def create_metadata_index(
             date_meeting=lambda x: x['date_meeting'].dt.year
         )
     ):
-        logger.error(f"Years do not match\n{invalid_years[['record_number', 'title_meeting', 'date_meeting', 'conference_date']]}")
+        logger.error(
+            f"Years do not match\n{invalid_years[['record_number', 'title_meeting', 'date_meeting', 'conference_date']]}"
+        )
 
     # Load proceedings metadata
     logger.info(f'Loading proceedings metadata: "{proceedings_metadata}"')
