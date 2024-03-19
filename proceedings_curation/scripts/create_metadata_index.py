@@ -62,6 +62,14 @@ def create_metadata_index(
     ):
         logger.error(f"Dates out of range\n{invalid_dates[['record_number', 'title_meeting', 'date_meeting']]}")
 
+    # Check that year in date_meeting is the same as conference_date
+    if len(
+        invalid_years := idxp.query('date_meeting.dt.year != conference_date').assign(
+            date_meeting=lambda x: x['date_meeting'].dt.year
+        )
+    ):
+        logger.error(f"Years do not match\n{invalid_years[['record_number', 'title_meeting', 'date_meeting', 'conference_date']]}")
+
     # Load proceedings metadata
     logger.info(f'Loading proceedings metadata: "{proceedings_metadata}"')
     idxm = pd.read_excel(
