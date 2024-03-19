@@ -39,6 +39,10 @@ def extract_meetings(  # pylint: disable=redefined-outer-name
         year: int = row.conference_date if row.date_meeting is pd.NaT else row.date_meeting.year
         output_filename: str = f"{year}_{i}_{'_'.join(row.title_meeting.split()[:3]).lower()}.txt"
 
+        if isinstance(extractor, TesseractExtractorMod):
+            extractor.language = row.language_codes
+            logger.info(f"Using Tesseract with language {row.language_codes} for {row.filename}")
+
         extractor.extract_text(
             filename=Path(input_path / row.filename),
             output_folder=output_path,
@@ -98,7 +102,6 @@ def main(
 
     check_source_files(input_path, index)
 
-    # FIXME: If TessseractExtractorMod is used, use language_codes from metadata_index as language argument
     extractor = TesseractExtractorMod() if extractor == 'tesseract' else PDFBoxExtractorMod()
     extract_meetings(index, input_path, output_path, extractor, page_numbers, page_sep, force)
 
