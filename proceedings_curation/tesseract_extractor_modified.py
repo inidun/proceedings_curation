@@ -29,7 +29,7 @@ class TesseractExtractorMod(TesseractExtractor):
     fmt: str = 'tiff'
     grayscale: bool = True
     use_pdftocairo: bool = True
-    language: str = "eng+ara+chi_sim+fra+rus+spa"
+    language: str = "eng"
 
     tesseract_config: str = '--oem 1 --psm 1'
     tessdata: str | None = os.getenv('TESSDATA_PREFIX')
@@ -37,6 +37,15 @@ class TesseractExtractorMod(TesseractExtractor):
     def __post_init__(self) -> None:
         if self.tessdata:
             self.tesseract_config += f' --tessdata-dir {self.tessdata}'
+
+    def set_language(self, language: str) -> None:
+        """Set language
+
+        Args:
+            language (str): Language
+        """
+
+        self.language = language
 
     def pdf_to_txt(
         self,
