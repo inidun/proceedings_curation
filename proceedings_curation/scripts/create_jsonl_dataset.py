@@ -68,7 +68,7 @@ def create_jsonl_dataset(metadata_index: str, input_path: str, output_path: str)
                 'file': filename,
                 'title': row.title_meeting,
                 'date': row.date_meeting.strftime('%Y-%m-%d') if not pd.isna(row.date_meeting) else None,
-                'source': f"{os.getenv('BASE_URL')}/{row.filename}#page={row.first_page}",
+                'source': f"{os.getenv('BASE_URL')}{row.filename}#page={row.first_page}",
             }
             writer.write({'text': text, 'meta': meta})
 
