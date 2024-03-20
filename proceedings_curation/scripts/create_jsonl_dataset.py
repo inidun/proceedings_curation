@@ -77,7 +77,7 @@ def remove_unusual_line_terminators(text: str) -> str:
     """Remove unusual line terminators from a string including U+0085 Next Line, U+2028 Line Separator, and U+2029 Paragraph Separator
 
     Args:
-        text (str): A string
+        text (str): The string to clean
 
     Returns:
         str: The string with unusual line terminators removed
