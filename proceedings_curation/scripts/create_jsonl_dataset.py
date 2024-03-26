@@ -19,6 +19,7 @@ def create_jsonl_dataset(
     dataset_name: Annotated[Optional[str], typer.Argument()] = 'dataset',
     number_of_files: Annotated[Optional[int], typer.Argument()] = None,
     tokens_per_file: Annotated[Optional[int], typer.Argument()] = None,
+    seed: Annotated[int, typer.Option(help="Random seed for sampling")] = 42,
 ) -> None:
     """Create a JSONL dataset from a folder of text files using a metadata index. Create a sample of the dataset by specifying the number of files to include and the number of tokens to keep per file.
 
@@ -50,6 +51,7 @@ def create_jsonl_dataset(
         dataset_name (str, optional): Name of the dataset. Defaults to 'dataset'.
         number_of_files (int, optional): Number of files to sample. Defaults to None.
         tokens_per_file (int, optional): Number of tokens to keep per file. Defaults to None.
+        seed (int, optional): Random seed for sampling. Defaults to 42.
     """
     # Load metadata index
     index = pd.read_csv(
@@ -68,7 +70,7 @@ def create_jsonl_dataset(
     # Create JSONL dataset
     with jsonlines.open(os.path.join(output_path, f'{dataset_name}.jsonl'), 'w') as writer:
         if number_of_files is not None:
-            index = index.sample(n=number_of_files)
+            index = index.sample(n=number_of_files, random_state=seed)
         for i, row in index.iterrows():
             year = row.conference_date if not pd.isna(row.date_meeting) else row.date_meeting.year
             filename = f"{year}_{i}_{'_'.join(row.title_meeting.split()[:3]).lower()}.txt"
