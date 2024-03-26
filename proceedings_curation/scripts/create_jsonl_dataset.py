@@ -1,11 +1,13 @@
 import os
 import re
+from typing import Optional
 
 import jsonlines
 import pandas as pd
 import typer
 from dotenv import load_dotenv
 from loguru import logger
+from typing_extensions import Annotated
 
 load_dotenv()
 
@@ -14,8 +16,9 @@ def create_jsonl_dataset(
     metadata_index: str,
     input_path: str,
     output_path: str,
-    number_of_files: int | None = None,
-    tokens_per_file: int | None = None,
+    dataset_name: Annotated[Optional[str], typer.Argument()] = 'dataset',
+    number_of_files: Annotated[Optional[int], typer.Argument()] = None,
+    tokens_per_file: Annotated[Optional[int], typer.Argument()] = None,
 ) -> None:
     """Create a JSONL dataset from a folder of text files using a metadata index. Create a sample of the dataset by specifying the number of files to include and the number of tokens to keep per file.
 
@@ -44,6 +47,7 @@ def create_jsonl_dataset(
         metadata_index (str): Path to the metadata index
         input_path (str): Path to the folder of text files
         output_path (str): Output path for the JSONL dataset
+        dataset_name (str, optional): Name of the dataset. Defaults to 'dataset'.
         number_of_files (int, optional): Number of files to sample. Defaults to None.
         tokens_per_file (int, optional): Number of tokens to keep per file. Defaults to None.
     """
@@ -62,7 +66,7 @@ def create_jsonl_dataset(
     os.makedirs(output_path, exist_ok=True)
 
     # Create JSONL dataset
-    with jsonlines.open(os.path.join(output_path, 'dataset.jsonl'), 'w') as writer:
+    with jsonlines.open(os.path.join(output_path, f'{dataset_name}.jsonl'), 'w') as writer:
         if number_of_files is not None:
             index = index.sample(n=number_of_files)
         for i, row in index.iterrows():
