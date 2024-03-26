@@ -49,5 +49,10 @@ extract_meetings:
 
 create_dataset: export PYTHONPATH=.
 create_dataset:
-	@poetry run python proceedings_curation/scripts/create_jsonl_dataset.py $(METADATA_INDEX_CSV) $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(PROCEEDINGS_DATASET_PATH)
+	@poetry run python proceedings_curation/scripts/create_jsonl_dataset.py $(METADATA_INDEX_CSV) $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(PROCEEDINGS_DATASET_PATH) dataset
 .PHONY: create_dataset
+
+create_dataset_sample: export PYTHONPATH=.
+create_dataset_sample:
+	@poetry run python proceedings_curation/scripts/create_jsonl_dataset.py $(METADATA_INDEX_CSV) $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(PROCEEDINGS_DATASET_PATH) dataset_sample 10 10
+.PHONY: create_dataset_sample
