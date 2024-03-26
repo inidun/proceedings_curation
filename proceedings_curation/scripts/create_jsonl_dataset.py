@@ -10,8 +10,14 @@ from loguru import logger
 load_dotenv()
 
 
-def create_jsonl_dataset(metadata_index: str, input_path: str, output_path: str) -> None:
-    """Create a JSONL dataset from a folder of text files using a metadata index
+def create_jsonl_dataset(
+    metadata_index: str,
+    input_path: str,
+    output_path: str,
+    number_of_files: int | None = None,
+    tokens_per_file: int | None = None,
+) -> None:
+    """Create a JSONL dataset from a folder of text files using a metadata index. Create a sample of the dataset by specifying the number of files to include and the number of tokens to keep per file.
 
     The metadata index is a CSV file with the following columns:
     - filename: Name of the PDF file
@@ -38,6 +44,8 @@ def create_jsonl_dataset(metadata_index: str, input_path: str, output_path: str)
         metadata_index (str): Path to the metadata index
         input_path (str): Path to the folder of text files
         output_path (str): Output path for the JSONL dataset
+        number_of_files (int, optional): Number of files to sample. Defaults to None.
+        tokens_per_file (int, optional): Number of tokens to keep per file. Defaults to None.
     """
     # Load metadata index
     index = pd.read_csv(
@@ -55,6 +63,8 @@ def create_jsonl_dataset(metadata_index: str, input_path: str, output_path: str)
 
     # Create JSONL dataset
     with jsonlines.open(os.path.join(output_path, 'dataset.jsonl'), 'w') as writer:
+        if number_of_files is not None:
+            index = index.sample(n=number_of_files)
         for i, row in index.iterrows():
             year = row.conference_date if not pd.isna(row.date_meeting) else row.date_meeting.year
             filename = f"{year}_{i}_{'_'.join(row.title_meeting.split()[:3]).lower()}.txt"
@@ -64,6 +74,8 @@ def create_jsonl_dataset(metadata_index: str, input_path: str, output_path: str)
             with open(os.path.join(input_path, filename), 'r', encoding='utf-8') as file:
                 text = file.read()
                 text = remove_unusual_line_terminators(text)
+                if tokens_per_file is not None:
+                    text = ' '.join(text.split()[:tokens_per_file])
             meta = {
                 'file': filename,
                 'title': row.title_meeting,
