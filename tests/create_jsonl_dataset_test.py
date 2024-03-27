@@ -1,6 +1,7 @@
 import os
 
 import jsonlines
+import nltk
 import pytest
 
 from proceedings_curation.scripts.create_jsonl_dataset import create_jsonl_dataset
@@ -25,9 +26,13 @@ def fixture_input_path(tmpdir):
     input_folder = os.path.join(tmpdir, 'input')
     os.makedirs(input_folder, exist_ok=True)
     with open(os.path.join(input_folder, '2022_100_first_meeting.txt'), 'w', encoding='utf-8') as f:
-        f.write("This is the text for meeting 1.")
+        f.write(
+            "This is the text for meeting 1. This is the second sentence. This is the third sentence. This is the fourth sentence. This is the fifth sentence."
+        )
     with open(os.path.join(input_folder, '2022_200_second_meeting.txt'), 'w', encoding='utf-8') as f:
-        f.write("This is the text for meeting 2.")
+        f.write(
+            "This is the text for meeting 2. This is the second sentence. This is the third sentence. This is the fourth sentence. This is the fifth sentence."
+        )
     return input_folder
 
 
@@ -53,13 +58,19 @@ def test_create_jsonl_dataset(metadata_index, input_path, output_path):
 
     assert len(lines) == 2
 
-    assert lines[0]['text'] == "This is the text for meeting 1."
+    assert (
+        lines[0]['text']
+        == "This is the text for meeting 1. This is the second sentence. This is the third sentence. This is the fourth sentence. This is the fifth sentence."
+    )
     assert lines[0]['meta']['file'] == "2022_100_first_meeting.txt"
     assert lines[0]['meta']['title'] == "First Meeting"
     assert lines[0]['meta']['date'] == "2022-01-01"
     assert lines[0]['meta']['source'] == "BASE_URL/file1.pdf#page=1"
 
-    assert lines[1]['text'] == "This is the text for meeting 2."
+    assert (
+        lines[1]['text']
+        == "This is the text for meeting 2. This is the second sentence. This is the third sentence. This is the fourth sentence. This is the fifth sentence."
+    )
     assert lines[1]['meta']['file'] == "2022_200_second_meeting.txt"
     assert lines[1]['meta']['title'] == "Second Meeting"
     assert lines[1]['meta']['date'] == "2022-02-02"
@@ -69,7 +80,7 @@ def test_create_jsonl_dataset(metadata_index, input_path, output_path):
 def test_create_jsonl_dataset_sample(metadata_index, input_path, output_path):
 
     # Call the create_jsonl_dataset function with sample arguments
-    create_jsonl_dataset(metadata_index, input_path, output_path, number_of_files=1, tokens_per_file=5, seed=42)
+    create_jsonl_dataset(metadata_index, input_path, output_path, number_of_files=1, sentences_per_file=3, seed=42)
 
     # Check if the JSONL dataset file is created
     dataset_file = os.path.join(output_path, 'dataset.jsonl')
@@ -81,11 +92,11 @@ def test_create_jsonl_dataset_sample(metadata_index, input_path, output_path):
 
     assert len(lines) == 1
 
-    assert lines[0]['text'] == "This is the text for"
+    assert lines[0]['text'] == "This is the third sentence. This is the fourth sentence. This is the fifth sentence."
     assert lines[0]['meta']['file'] == "2022_200_second_meeting.txt"
     assert lines[0]['meta']['title'] == "Second Meeting"
     assert lines[0]['meta']['date'] == "2022-02-02"
     assert lines[0]['meta']['source'] == "BASE_URL/file2.pdf#page=1"
 
-    # Check if the number of tokens is limited
-    assert len(lines[0]['text'].split()) == 5
+    # Check if the number of sentences is correct
+    assert len(nltk.sent_tokenize(lines[0]['text'])) == 3
