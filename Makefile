@@ -34,6 +34,14 @@ lint: tidy pylint
 typing: lint mypy
 .PHONY: typing
 
+data: nltk_data
+.PHONY: data
+
+nltk_data:
+	@mkdir -p $(NLTK_DATA)
+	@poetry run python -c "import nltk; nltk.download('punkt', download_dir='$(NLTK_DATA)')"
+.PHONY: nltk_data
+
 create_metadata:
 	@poetry run python proceedings_curation/scripts/create_metadata_index.py $(PROCEEDINGS_INDEX) $(PROCEEDINGS_METADATA) $(METADATA_INDEX)
 .PHONY: create_metadata
@@ -53,6 +61,6 @@ create_dataset:
 .PHONY: create_dataset
 
 create_dataset_sample: export PYTHONPATH=.
-create_dataset_sample:
+create_dataset_sample: nltk_data
 	@poetry run python proceedings_curation/scripts/create_jsonl_dataset.py $(METADATA_INDEX_CSV) $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(PROCEEDINGS_DATASET_PATH) dataset_sample 20 100 --seed 42
 .PHONY: create_dataset_sample
