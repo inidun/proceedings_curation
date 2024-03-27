@@ -19,7 +19,7 @@ def create_jsonl_dataset(
     dataset_name: Annotated[Optional[str], typer.Argument()] = 'dataset',
     number_of_files: Annotated[Optional[int], typer.Argument()] = None,
     tokens_per_file: Annotated[Optional[int], typer.Argument()] = None,
-    seed: Annotated[int, typer.Option(help="Random seed for sampling")] = 42,
+    seed: Annotated[Optional[int], typer.Option(help="Random seed for sampling")] = None,
 ) -> None:
     """Create a JSONL dataset from a folder of text files using a metadata index. Create a sample of the dataset by specifying the number of files to include and the number of tokens to keep per file.
 
