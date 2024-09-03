@@ -39,7 +39,7 @@ data: nltk_data
 
 nltk_data:
 	@mkdir -p $(NLTK_DATA)
-	@poetry run python -c "import nltk; nltk.download('punkt', download_dir='$(NLTK_DATA)')"
+	@poetry run python -c "import nltk; nltk.download('punkt', download_dir='$(NLTK_DATA)'); nltk.download('punkt_tab', download_dir='$(NLTK_DATA)')"
 .PHONY: nltk_data
 
 create_metadata:
