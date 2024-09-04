@@ -37,6 +37,14 @@ typing: lint mypy
 data: nltk_data
 .PHONY: data
 
+test:
+	@poetry run pytest --durations=0 tests/
+.PHONY: test
+
+retest:
+	@poetry run pytest --durations=0 --last-failed tests
+.PHONY: retest
+
 nltk_data:
 	@mkdir -p $(NLTK_DATA)
 	@poetry run python -c "import nltk; nltk.download('punkt', download_dir='$(NLTK_DATA)'); nltk.download('punkt_tab', download_dir='$(NLTK_DATA)')"
