@@ -45,6 +45,12 @@ retest:
 	@poetry run pytest --durations=0 --last-failed tests
 .PHONY: retest
 
+clean:
+	@find . -type d -name '__pycache__' -exec rm -rf {} +
+	@find . -type d -name '*pytest_cache*' -exec rm -rf {} +
+	@find . -type d -name '.mypy_cache' -exec rm -rf {} +
+.PHONY: clean
+
 nltk_data:
 	@mkdir -p $(NLTK_DATA)
 	@poetry run python -c "import nltk; nltk.download('punkt', download_dir='$(NLTK_DATA)'); nltk.download('punkt_tab', download_dir='$(NLTK_DATA)')"
