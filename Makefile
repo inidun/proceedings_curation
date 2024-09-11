@@ -78,3 +78,14 @@ create_dataset_sample: export PYTHONPATH=.
 create_dataset_sample: nltk_data
 	@poetry run python proceedings_curation/scripts/create_jsonl_dataset.py $(METADATA_INDEX_CSV) $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(PROCEEDINGS_DATASET_PATH) dataset_sample 100 10 --seed 42
 .PHONY: create_dataset_sample
+
+
+extract_english_corpus: export PYTHONPATH=.
+extract_english_corpus:
+	@poetry run python proceedings_curation/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(ENGLISH_CORPUS_PATH) --tokenizer simple --filter-languages en 
+.PHONY: extract_english_corpus
+
+extract_french_corpus: export PYTHONPATH=.
+extract_french_corpus:
+	@poetry run python proceedings_curation/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(FRENCH_CORPUS_PATH) --tokenizer simple --filter-languages fr
+.PHONY: extract_french_corpus
