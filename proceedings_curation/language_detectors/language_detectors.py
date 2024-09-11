@@ -17,7 +17,7 @@ class LanguageDetector:
         raise NotImplementedError("Detect method must be implemented")
 
 
-# FIXME: possible_languages should be optional. If not provided, detect all languages supported by langdetect
+# FIXME: #12 possible_languages should be optional. If not provided, detect all languages supported by langdetect
 class LangDetect(LanguageDetector):
     def __init__(self, possible_languages: list[str]) -> None:
         super().__init__(possible_languages)
@@ -27,7 +27,7 @@ class LangDetect(LanguageDetector):
             detections = [d for d in detect_langs(text) if d.lang in self.possible_languages]
         except LangDetectException:
             detections = None
-        return str(detections[0].lang) if detections else None  # TODO (optional): Use a threshold to return None
+        return str(detections[0].lang) if detections else None  # TODO #13 (optional): Use a threshold to return None
 
 
 class LanguageDetectorFactory:
