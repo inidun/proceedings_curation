@@ -11,6 +11,7 @@ def extract_text_from_alto(file_path: os.PathLike | str) -> str:
     Returns:
         str: Text content extracted from the ALTO XML file.
     """
+    # Convert the file path to a string
     file_path = os.fspath(file_path)
 
     # Define the namespace
@@ -38,6 +39,7 @@ def extract_text_from_hocr(file_path: os.PathLike | str) -> str:
     Returns:
         str: Text content extracted from the HOCR file.
     """
+    # Convert the file path to a string
     file_path = os.fspath(file_path)
 
     # Parse the HOCR file
