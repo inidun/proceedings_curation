@@ -1,6 +1,7 @@
 include .env
 SHELL := /bin/bash
 SOURCE_FOLDERS=proceedings_curation tests
+PACKAGE_FOLDER=proceedings_curation
 BLACK_ARGS=--line-length 120 --target-version py311 --skip-string-normalization -q
 MYPY_ARGS=--show-column-numbers --no-error-summary --python-version 3.11
 ISORT_ARGS=--profile black --float-to-top --line-length 120 --py auto
@@ -45,7 +46,11 @@ retest:
 	@poetry run pytest --durations=0 --last-failed tests
 .PHONY: retest
 
+coverage:
+	@poetry run pytest --cov=$(PACKAGE_FOLDER) --cov-report=html tests/
+
 clean:
+	@rm -rf .coverage htmlcov
 	@find . -type d -name '__pycache__' -exec rm -rf {} +
 	@find . -type d -name '*pytest_cache*' -exec rm -rf {} +
 	@find . -type d -name '.mypy_cache' -exec rm -rf {} +
