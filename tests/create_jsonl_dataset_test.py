@@ -1,10 +1,11 @@
+import logging
 import os
 
 import jsonlines
 import nltk
 import pytest
 
-from proceedings_curation.scripts.create_jsonl_dataset import create_jsonl_dataset
+from proceedings_curation.scripts.create_jsonl_dataset import create_jsonl_dataset, extract_n_consecutive_sentences
 
 os.environ['BASE_URL'] = 'BASE_URL/'
 
@@ -100,3 +101,65 @@ def test_create_jsonl_dataset_sample(metadata_index, input_path, output_path):
 
     # Check if the number of sentences is correct
     assert len(nltk.sent_tokenize(lines[0]['text'])) == 3
+
+
+def test_create_jsonl_dataset_missing_file(metadata_index, input_path, output_path, caplog):
+    # Remove the first input file
+    os.remove(os.path.join(input_path, '2022_100_first_meeting.txt'))
+
+    with caplog.at_level(logging.ERROR):
+        # Call the create_jsonl_dataset function
+        create_jsonl_dataset(metadata_index, input_path, output_path)
+
+    log_messages = [record.message for record in caplog.records]
+    assert "File 2022_100_first_meeting.txt not found" in log_messages
+
+    # Check if the JSONL dataset file is created
+    dataset_file = os.path.join(output_path, 'dataset.jsonl')
+    assert os.path.exists(dataset_file)
+
+    # Check the content of the JSONL dataset file
+    with jsonlines.open(dataset_file, 'r') as reader:
+        lines = list(reader)
+
+    assert len(lines) == 1
+
+    assert (
+        lines[0]['text']
+        == "This is the text for meeting 2. This is the second sentence. This is the third sentence. This is the fourth sentence. This is the fifth sentence."
+    )
+    assert lines[0]['meta']['file'] == "2022_200_second_meeting.txt"
+    assert lines[0]['meta']['title'] == "Second Meeting"
+    assert lines[0]['meta']['date'] == "2022-02-02"
+    assert lines[0]['meta']['source'] == "BASE_URL/file2.pdf#page=1"
+
+
+def test_extract_n_consecutive_sentences():
+    text = (
+        "This is the first sentence. This is the second sentence. This is the third sentence. "
+        "This is the fourth sentence. This is the fifth sentence."
+    )
+
+    # Test extracting 3 consecutive sentences with a fixed seed
+    result = extract_n_consecutive_sentences(text, 3, seed=42)
+    assert result == "This is the third sentence. This is the fourth sentence. This is the fifth sentence."
+
+    # Test extracting more sentences than available
+    result = extract_n_consecutive_sentences(text, 10)
+    assert result == text
+
+    # Test extracting exactly the number of sentences available
+    result = extract_n_consecutive_sentences(text, 5)
+    assert result == text
+
+    # Test extracting 1 sentence
+    result = extract_n_consecutive_sentences(text, 1, seed=42)
+    assert result == "This is the first sentence."
+
+    # Test extracting 0 sentences (should return empty string)
+    result = extract_n_consecutive_sentences(text, 0)
+    assert result == ""
+
+    # Test extracting sentences without seed (random behavior)
+    result = extract_n_consecutive_sentences(text, 2)
+    assert len(nltk.sent_tokenize(result)) == 2
