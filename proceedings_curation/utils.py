@@ -58,5 +58,5 @@ def extract_text_from_hocr(file_path: os.PathLike | str) -> str:
     return text_content
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     pass

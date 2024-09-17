@@ -270,5 +270,5 @@ class TesseractExtractorMod(TesseractExtractor):
         )
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     pass

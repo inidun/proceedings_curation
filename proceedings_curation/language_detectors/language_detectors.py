@@ -39,5 +39,5 @@ class LanguageDetectorFactory:
         raise ValueError("Invalid language detector")
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     pass

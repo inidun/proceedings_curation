@@ -97,5 +97,5 @@ class PDFBoxExtractorMod(PDFBoxExtractor):
         logger.success(f'Extracted {ouput_filename} ({basename}.pdf:{first_page}-{last_page})')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     pass
