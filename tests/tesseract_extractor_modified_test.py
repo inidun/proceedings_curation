@@ -3,6 +3,7 @@ import pytest
 from fpdf import FPDF
 
 from proceedings_curation.tesseract_extractor_modified import TesseractExtractorMod
+from proceedings_curation.utils import extract_text_from_alto, extract_text_from_hocr
 
 
 def test_tesseract_language_support():
@@ -52,3 +53,39 @@ def test_tesseract_extractor_mod_returns_expected_output(pdf_file, text_content,
 
     assert tmpdir.join('test.txt').exists()
     assert tmpdir.join('test.txt').read().rstrip() == expected
+
+
+
+def test_pdf_to_txt(pdf_file, text_content, tmpdir):
+    assert pdf_file.exists()
+    expected = text_content
+    extractor = TesseractExtractorMod()
+    extractor.set_language('eng')
+
+    extractor.pdf_to_txt(pdf_file, output_folder=tmpdir)
+
+    assert tmpdir.join('test_0001.txt').exists()
+    assert tmpdir.join('test_0001.txt').read().rstrip() == expected
+
+
+
+def test_pdf_to_alto(pdf_file, text_content, tmpdir):
+    assert pdf_file.exists()
+    expected = text_content
+    extractor = TesseractExtractorMod()
+
+    extractor.pdf_to_alto(pdf_file, output_folder=tmpdir)
+
+    assert tmpdir.join('test_0001.alto').exists()
+    assert extract_text_from_alto(tmpdir.join('test_0001.alto')) == expected
+
+
+def test_pdf_to_hocr(pdf_file, text_content, tmpdir):
+    assert pdf_file.exists()
+    expected = text_content
+    extractor = TesseractExtractorMod()
+
+    extractor.pdf_to_hocr(pdf_file, output_folder=tmpdir)
+
+    assert tmpdir.join('test_0001.hocr').exists()
+    assert extract_text_from_hocr(tmpdir.join('test_0001.hocr')) == expected
