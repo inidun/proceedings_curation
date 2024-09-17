@@ -1,5 +1,3 @@
-# language_filters/language_filters.py
-
 from typing import List
 
 from proceedings_curation.language_detectors.language_detectors import LangDetect, LanguageDetector
