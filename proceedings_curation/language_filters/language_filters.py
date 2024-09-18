@@ -3,6 +3,7 @@ from typing import List
 from proceedings_curation.language_detectors.language_detectors import LangDetect, LanguageDetector
 
 
+# FIXME: #14 Use language_detector_config as a parameter instead of language_detector
 class LanguageFilter:
     def __init__(
         self,
