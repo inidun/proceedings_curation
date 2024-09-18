@@ -12,7 +12,11 @@ class LanguageFilter:
     ) -> None:
         self.languages = languages if isinstance(languages, list) else [languages]
         self.keep_undetected = keep_undetected
-        self.language_detector = language_detector or LangDetect(self.languages)
+
+        if isinstance(language_detector, LanguageDetector):
+            self.language_detector = language_detector
+        else:
+            self.language_detector = LangDetect(possible_languages=self.languages)
 
     def filter(self, paragraphs: List[str]) -> List[str]:
         return [
@@ -21,3 +25,7 @@ class LanguageFilter:
             if self.language_detector.detect(paragraph) in self.languages
             or (self.keep_undetected and self.language_detector.detect(paragraph) is None)
         ]
+
+
+if __name__ == '__main__':  # pragma: no cover
+    pass
