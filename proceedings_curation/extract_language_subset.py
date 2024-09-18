@@ -15,7 +15,7 @@ def process_files(
     input_folder: str,
     output_folder: str,
     tokenizer: str,
-    possible_languages: list[str],
+    possible_languages: list[str] | None,
     filter_languages: str | list[str],
     language_detector: str = "langdetect",
     keep_undetected: bool = False,
@@ -28,9 +28,14 @@ def process_files(
     tokenizer = TokenizerFactory.get_tokenizer(tokenizer)
     loguru.logger.info(f"Using tokenizer: {tokenizer.__class__.__name__}")
 
-    language_detector = LanguageDetectorFactory.get_language_detector(language_detector, possible_languages)
+    language_detector_options = {"possible_languages": possible_languages}
+
+    language_detector = LanguageDetectorFactory.get_language_detector(
+        detector=language_detector, **language_detector_options
+    )
+
     loguru.logger.info(
-        f"Using language detector: {language_detector.__class__.__name__}. Detecting languages: {possible_languages}"
+        f"Using language detector: {language_detector.__class__.__name__} with options: {language_detector_options}"
     )
 
     language_filter = LanguageFilter(
@@ -76,7 +81,7 @@ def main(  # pylint: disable=too-many-arguments
     input_folder: str,
     output_folder: str,
     tokenizer: str = 'nltk',
-    possible_languages: list[str] = ['en', 'ar', 'zh', 'fr', 'ru', 'es'],
+    possible_languages: list[str] | None = None,  # = ['en', 'ar', 'zh', 'fr', 'ru', 'es'],
     # filter_languages: Annotated[List[FilterLanguages], typer.Option()] = [FilterLanguages.en, FilterLanguages.fr],
     filter_languages: Annotated[list[str], typer.Option()] = ['en'],
     language_detector: str = "langdetect",
