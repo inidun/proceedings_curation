@@ -159,5 +159,5 @@ def main(proceedings_index: str, proceedings_metadata: str, filename: str) -> No
     save_metadata_index(idx, filename)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     typer.run(main)

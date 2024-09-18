@@ -133,5 +133,5 @@ def load_index(metadata_index: str | os.PathLike) -> pd.DataFrame:
     return index
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     argh.dispatch_command(main)

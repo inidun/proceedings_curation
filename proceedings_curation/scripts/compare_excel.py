@@ -69,5 +69,5 @@ def compare_excel(old: str, new: str, report: str) -> None:
         writer.sheets['changed'].conditional_format(f'A1:ZZ{str(len(changed.index) + 1)}', condition)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     typer.run(compare_excel)

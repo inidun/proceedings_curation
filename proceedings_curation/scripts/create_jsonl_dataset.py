@@ -132,5 +132,5 @@ def extract_n_consecutive_sentences(text: str, n: int, seed: Optional[int] = Non
     return ' '.join(extracted_sentences)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     typer.run(create_jsonl_dataset)
