@@ -10,31 +10,37 @@ DetectorFactory.seed = 0  # Necessary for deterministic results
 
 
 class LanguageDetector:
-    def __init__(self, possible_languages: list[str]) -> None:
-        self.possible_languages = possible_languages or DEFAULT_LANGUAGES
+    def __init__(self) -> None:
+        pass
 
     def detect(self, text: str) -> str | None:
         raise NotImplementedError("Detect method must be implemented")
 
 
-# FIXME: #12 possible_languages should be optional. If not provided, detect all languages supported by langdetect
 class LangDetect(LanguageDetector):
-    def __init__(self, possible_languages: list[str]) -> None:
-        super().__init__(possible_languages)
+    def __init__(self, **kwargs) -> None:  # type: ignore[no-untyped-def]
+        super().__init__()
+        self.options = kwargs
+        self.possible_languages = kwargs.get("possible_languages", None)
+        self.threshold = kwargs.get("threshold", 0.95)
 
     def detect(self, text: str) -> str | None:
         try:
-            detections = [d for d in detect_langs(text) if d.lang in self.possible_languages]
+            detections = [
+                d
+                for d in detect_langs(text)
+                if (self.possible_languages is None or d.lang in self.possible_languages) and d.prob >= self.threshold
+            ]
         except LangDetectException:
             detections = None
-        return str(detections[0].lang) if detections else None  # TODO #13 (optional): Use a threshold to return None
+        return str(detections[0].lang) if detections else None
 
 
 class LanguageDetectorFactory:
     @staticmethod
-    def get_language_detector(detector: str, possible_languages: list[str]) -> LanguageDetector:
+    def get_language_detector(detector: str, **kwargs) -> LanguageDetector:  # type: ignore[no-untyped-def]
         if detector == "langdetect":
-            return LangDetect(possible_languages)
+            return LangDetect(**kwargs)
 
         raise ValueError("Invalid language detector")
 
