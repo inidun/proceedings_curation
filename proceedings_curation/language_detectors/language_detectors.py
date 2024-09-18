@@ -22,15 +22,23 @@ class LangDetect(LanguageDetector):
         super().__init__()
         self.options = kwargs
         self.possible_languages = kwargs.get("possible_languages", None)
-        self.threshold = kwargs.get("threshold", 0.95)
+        self.threshold = kwargs.get("threshold", None)
 
     def detect(self, text: str) -> str | None:
         try:
-            detections = [
-                d
-                for d in detect_langs(text)
-                if (self.possible_languages is None or d.lang in self.possible_languages) and d.prob >= self.threshold
-            ]
+            if self.threshold is None:
+                detections = [
+                    d
+                    for d in detect_langs(text)
+                    if self.possible_languages is None or d.lang in self.possible_languages
+                ]
+            else:
+                detections = [
+                    d
+                    for d in detect_langs(text)
+                    if (self.possible_languages is None or d.lang in self.possible_languages)
+                    and d.prob >= self.threshold
+                ]
         except LangDetectException:
             detections = None
         return str(detections[0].lang) if detections else None
