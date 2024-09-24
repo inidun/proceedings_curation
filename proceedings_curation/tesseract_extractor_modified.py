@@ -177,7 +177,7 @@ class TesseractExtractorMod(TesseractExtractor):
 
         logger.success(f'Extracted: {basename}, pages: {i+1}, dpi: {self.dpi}, fmt: {self.fmt}, lang: {lang}')
 
-    def extract_text(  # pylint: disable=too-many-arguments
+    def extract_text(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         filename: str | os.PathLike,
         output_folder: str | os.PathLike,

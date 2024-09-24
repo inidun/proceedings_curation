@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 @dataclass
 class PDFBoxExtractorMod(PDFBoxExtractor):
-    def extract_text(  # pylint: disable=too-many-arguments
+    def extract_text(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         filename: str | os.PathLike,
         output_folder: str | os.PathLike,
