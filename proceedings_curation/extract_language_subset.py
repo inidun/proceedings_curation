@@ -28,7 +28,7 @@ def process_files(
     tokenizer = TokenizerFactory.get_tokenizer(tokenizer)
     loguru.logger.info(f"Using tokenizer: {tokenizer.__class__.__name__}")
 
-    language_detector_options = {"possible_languages": possible_languages}
+    language_detector_options = {"possible_languages": possible_languages, "threshold": None}
 
     language_detector = LanguageDetectorFactory.get_language_detector(
         detector=language_detector, **language_detector_options
@@ -77,7 +77,7 @@ class FilterLanguages(str, Enum):
     es = 'es'
 
 
-def main(  # pylint: disable=too-many-arguments
+def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     input_folder: str,
     output_folder: str,
     tokenizer: str = 'nltk',
