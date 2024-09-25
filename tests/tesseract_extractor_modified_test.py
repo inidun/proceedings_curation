@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytesseract
 import pytest
 from fpdf import FPDF
@@ -87,3 +89,68 @@ def test_pdf_to_hocr(pdf_file, text_content, tmpdir):
 
     assert tmpdir.join('test_0001.hocr').exists()
     assert extract_text_from_hocr(tmpdir.join('test_0001.hocr')) == expected
+
+
+@pytest.fixture(name='text_content_multiple_lines')
+def mock_text_multiple_lines():
+    return [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    ]
+
+
+@pytest.fixture(name='pdf_file_multiple_pages')
+def mock_pdf_file_multiple_pages(tmpdir, text_content_multiple_lines):
+    # Create a new PDF document
+    pdf = FPDF()
+
+    # Add a page
+    pdf.add_page()
+
+    # Set font and font size
+    pdf.set_font("Arial", size=12)
+
+    # Add the text content to the page
+    pdf.cell(0, 10, text=text_content_multiple_lines[0], ln=True)
+
+    # Add another page
+    pdf.add_page()
+
+    # Add the text content to the page
+    pdf.cell(0, 10, text=text_content_multiple_lines[1], ln=True)
+
+    # Path to the mock PDF file
+    mock_file_path = tmpdir.join("test.pdf")
+
+    # Save the PDF document to the mock file
+    pdf.output(str(mock_file_path))
+
+    return mock_file_path
+
+
+@pytest.fixture(name='expected_multiple_pages_with_page_numbers')
+def mock_expected_multiple_pages_with_page_numbers():
+    return """# test
+
+
+## Page 1
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+
+
+## Page 2
+
+Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."""
+
+
+def test_extract_test_with_page_numbers(pdf_file_multiple_pages, expected_multiple_pages_with_page_numbers, tmpdir):
+    assert pdf_file_multiple_pages.exists()
+    expected = expected_multiple_pages_with_page_numbers
+    extractor = TesseractExtractorMod()
+
+    extractor.extract_text(pdf_file_multiple_pages, output_folder=tmpdir, page_numbers=True)
+
+    assert tmpdir.join('test.txt').exists()
+    assert tmpdir.join('test.txt').read().rstrip() == expected
+    assert tmpdir.join('test.txt').read().strip().split('\n')[0] == '# ' + Path(pdf_file_multiple_pages).stem
