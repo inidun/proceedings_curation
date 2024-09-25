@@ -57,6 +57,40 @@ def test_tesseract_extractor_mod_returns_expected_output(pdf_file, text_content,
     assert tmpdir.join('test.txt').read().rstrip() == expected
 
 
+def test_extract_text_logs_info_when_output_file_exists_and_force_is_false(pdf_file, text_content, tmpdir, caplog):
+    assert pdf_file.exists()
+    expected = text_content
+    extractor = TesseractExtractorMod()
+
+    output_filename = 'test.txt'
+    output_file = tmpdir.join(output_filename)
+    output_file.write(text_content)
+
+    extractor.extract_text(pdf_file, output_folder=tmpdir)
+
+    assert tmpdir.join(output_filename).exists()
+    assert tmpdir.join(output_filename).read().rstrip() == expected
+
+    assert f'Skipping {output_filename}: Already extracted' in caplog.text
+
+
+def test_extract_text_overwrites_output_file_when_force_is_true(pdf_file, text_content, tmpdir, caplog):
+    assert pdf_file.exists()
+    expected = text_content
+    extractor = TesseractExtractorMod()
+
+    output_filename = 'test.txt'
+    output_file = tmpdir.join(output_filename)
+    output_file.write('Some other content')
+
+    extractor.extract_text(pdf_file, output_folder=tmpdir, force=True)
+
+    assert tmpdir.join(output_filename).exists()
+    assert tmpdir.join(output_filename).read().rstrip() == expected
+
+    assert f'Overwriting {output_filename}' in caplog.text
+
+
 def test_pdf_to_txt(pdf_file, text_content, tmpdir):
     assert pdf_file.exists()
     expected = text_content
