@@ -216,7 +216,7 @@ class TesseractExtractorMod(TesseractExtractor):
         if last_page is None or last_page > num_pages:
             last_page = int(num_pages)
 
-        ouput_filename: str = (
+        output_filename: str = (
             output_filename
             if output_filename
             else (
@@ -225,15 +225,15 @@ class TesseractExtractorMod(TesseractExtractor):
                 else f'{basename}.txt'
             )
         )
-        output_filepath: Path = Path(output_folder) / ouput_filename
+        output_filepath: Path = Path(output_folder) / output_filename
 
         if output_filepath.exists():
             if not force:
-                logger.info(f'Skipping {ouput_filename}: Already extracted')
+                logger.info(f'Skipping {output_filename}: Already extracted')
                 return
-            logger.info(f'Overwriting {ouput_filename}')
+            logger.info(f'Overwriting {output_filename}')
 
-        logger.info(f'Processing {ouput_filename} ({basename}.pdf:{first_page}-{last_page})')
+        logger.info(f'Processing {output_filename} ({basename}.pdf:{first_page}-{last_page})')
 
         images = convert_from_path(
             str(filename),
@@ -251,7 +251,7 @@ class TesseractExtractorMod(TesseractExtractor):
                 with open(text_filename, 'w', encoding='utf-8') as fp:
                     fp.write(pytesseract.image_to_string(image, lang=lang, config=self.tesseract_config))
 
-            with open(Path(output_folder) / ouput_filename, 'w', encoding='utf-8') as outfile:
+            with open(Path(output_folder) / output_filename, 'w', encoding='utf-8') as outfile:
                 if page_numbers:
                     outfile.write(f'# {basename}\n\n')
 
@@ -266,7 +266,7 @@ class TesseractExtractorMod(TesseractExtractor):
                         outfile.write(f'\n{page_sep}\n')
 
         logger.success(
-            f'Extracted: {ouput_filename}, pages: {first_page}-{last_page}, dpi: {self.dpi}, fmt: {self.fmt}, lang: {lang}'
+            f'Extracted: {output_filename}, pages: {first_page}-{last_page}, dpi: {self.dpi}, fmt: {self.fmt}, lang: {lang}'
         )
 
 
