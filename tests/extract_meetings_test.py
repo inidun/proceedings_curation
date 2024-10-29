@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from proceedings_curation.pdfbox_extractor_modified import PDFBoxExtractorMod
-from proceedings_curation.scripts.extract_meetings import extract_meetings
+from proceedings_curation.scripts.extract_meetings import check_source_files, extract_meetings, load_index, main
 from proceedings_curation.tesseract_extractor_modified import TesseractExtractorMod
 
 
@@ -99,3 +99,56 @@ class TestExtractMeetings:
         with patch.object(extractor, 'extract_text', return_value=None) as mock_extract:
             extract_meetings(metadata_index, input_path, output_path, extractor, page_sep='---')
             assert mock_extract.call_count == 2
+
+
+@pytest.fixture(name="metadata_index_file")
+def fixture_metadata_index_file(tmp_path, metadata_index):
+    file_path = tmp_path / "metadata_index.xlsx"
+    metadata_index.to_excel(file_path, index_label='meeting_id')
+    return file_path
+
+
+class TestCheckSourceFiles:
+    def test_check_source_files(self, input_path, metadata_index, caplog):
+        check_source_files(input_path, metadata_index)
+        assert f'Found all source files in {input_path}' in caplog.text
+
+    def test_check_source_files_with_missing_files(self, input_path, metadata_index, caplog):
+        (input_path / "file1.pdf").unlink()
+        check_source_files(input_path, metadata_index)
+        assert "1 missing source files in" in caplog.text
+
+
+class TestLoadIndex:
+    def test_load_index(self, metadata_index_file):
+        index = load_index(metadata_index_file)
+        assert not index.empty
+        assert 'record_number' in index.columns
+
+
+class TestMain:
+    def test_main(self, metadata_index_file, input_path, output_path):
+        with patch('proceedings_curation.scripts.extract_meetings.extract_meetings') as mock_extract_meetings:
+            main(
+                metadata_index=metadata_index_file,
+                input_path=input_path,
+                output_path=output_path,
+                extractor='pdfbox',
+                page_numbers=False,
+                page_sep='',
+                force=False,
+            )
+            assert mock_extract_meetings.called
+
+    def test_main_with_tesseract(self, metadata_index_file, input_path, output_path):
+        with patch('proceedings_curation.scripts.extract_meetings.extract_meetings') as mock_extract_meetings:
+            main(
+                metadata_index=metadata_index_file,
+                input_path=input_path,
+                output_path=output_path,
+                extractor='tesseract',
+                page_numbers=False,
+                page_sep='',
+                force=False,
+            )
+            assert mock_extract_meetings.called
