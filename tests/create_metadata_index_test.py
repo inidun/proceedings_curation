@@ -175,6 +175,15 @@ class TestSaveMetadataIndex:
         df_read = pd.read_excel(file_path)
         pd.testing.assert_frame_equal(metadata_index, df_read.iloc[:, 1:])
 
+    def test_save_metadata_index_as_csv(self, metadata_index, tmp_path):
+        file_path = tmp_path / "metadata_index.csv"
+        save_metadata_index(metadata_index, file_path)
+
+        assert file_path.exists()
+
+        df_read = pd.read_csv(file_path, sep=";")
+        pd.testing.assert_frame_equal(metadata_index, df_read.iloc[:, 1:])
+
 
 class TestMainFunction:
     def test_main_function(self, proceedings_index_file, proceedings_metadata_file, tmp_path):
