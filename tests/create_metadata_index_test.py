@@ -35,6 +35,37 @@ def fixture_proceedings_index_file(tmp_path):
     return file_path
 
 
+@pytest.fixture(name="proceedings_index_file_with_date_errors")
+def fixture_proceedings_index_file_with_date_errors(tmp_path):
+    data = {
+        'Record number': [1, 2],
+        'Session number': ['3X', '4X'],
+        'Pages in doc': ['1-10', '11-20'],
+        'Pages in pdf': ['1-10', '11-20'],
+        'Date meeting': ['2010-01-01', 'NaT'],  # Date out of range and invalid date (NaT)
+        'Session president': ['President 1', 'President 2'],
+        'Title meeting': ['Meeting 1', 'Meeting 2'],
+        'Chapter': ['A', 'B'],
+        'Languages': ['mul|ara eng', 'eng'],
+        'Document codes': ['Document code 1', 'Document code 2'],
+        'Title': ['Title 1', 'Title 2'],
+        'Titles in other languages': ['Title 1', 'Title 2'],
+        'Publication date': [2020, 2021],
+        'Volume': [1, 2],
+        'Physical description': ['Physical description 1', 'Physical description 2'],
+        'Conference name': ['Conference name 1', 'Conference name 2'],
+        'Conference session': ['Conference session 1', 'Conference session 2'],
+        'Conference location': ['Conference location 1', 'Conference location 2'],
+        'Conference date ': [2020, 2021],  # Years do not match with 'Date meeting'
+        'Corporate subject': ['Corporate subject 1', 'Corporate subject 2'],
+        'Variant title': ['Variant title 1', 'Variant title 2'],
+    }
+    df = pd.DataFrame(data)
+    file_path = tmp_path / "proceedings_index.xlsx"
+    df.to_excel(file_path, index=False)
+    return file_path
+
+
 @pytest.fixture(name="proceedings_metadata_file")
 def fixture_proceedings_metadata_file(tmp_path):
     data = {
@@ -88,6 +119,15 @@ class TestCreateMetadataIndex:
         assert isinstance(idx, pd.DataFrame)
         assert not idx.empty
         assert idx.columns.tolist() == expected_columns
+
+    def test_create_metadata_with_date_errors(
+        self, proceedings_index_file_with_date_errors, proceedings_metadata_file, caplog
+    ):
+        _ = create_metadata_index(proceedings_index_file_with_date_errors, proceedings_metadata_file)
+
+        assert "errors in Proceedings index, 'Date meeting'" in caplog.text
+        assert "Dates out of range" in caplog.text
+        assert "Years do not match" in caplog.text
 
 
 @pytest.fixture(name="metadata_index")
