@@ -4,7 +4,7 @@ import pytest
 import typer
 from typer.testing import CliRunner
 
-from proceedings_curation.extract_language_subset import main, process_files
+from proceedings_curation.scripts.extract_language_subset import main, process_files
 
 
 @pytest.fixture(name="input_folder")
