@@ -29,21 +29,28 @@ mypy:
 	@poetry run mypy $(MYPY_ARGS) $(SOURCE_FOLDERS) || true
 .PHONY: mypy
 
+mypy-strict:
+	@poetry run mypy $(MYPY_ARGS) --strict $(SOURCE_FOLDERS) || true
+.PHONY: mypy-strict
+
 lint: tidy pylint
 .PHONY: lint
 
 typing: lint mypy
 .PHONY: typing
 
+typing-strict: lint mypy-strict
+.PHONY: typing-strict
+
 data: nltk_data
 .PHONY: data
 
 test:
-	@poetry run pytest --durations=0 tests/
+	@poetry run pytest tests/
 .PHONY: test
 
 retest:
-	@poetry run pytest --durations=0 --last-failed tests
+	@poetry run pytest --last-failed tests/
 .PHONY: retest
 
 coverage:
@@ -54,6 +61,7 @@ clean:
 	@find . -type d -name '__pycache__' -exec rm -rf {} +
 	@find . -type d -name '*pytest_cache*' -exec rm -rf {} +
 	@find . -type d -name '.mypy_cache' -exec rm -rf {} +
+	@rm -rf tests/output
 .PHONY: clean
 
 nltk_data:
@@ -87,10 +95,10 @@ create_dataset_sample: nltk_data
 
 extract_english_corpus: export PYTHONPATH=.
 extract_english_corpus:
-	@poetry run python proceedings_curation/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(ENGLISH_CORPUS_PATH) --tokenizer simple --filter-languages en 
+	@poetry run python proceedings_curation/scripts/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(ENGLISH_CORPUS_PATH) --tokenizer simple --filter-languages en 
 .PHONY: extract_english_corpus
 
 extract_french_corpus: export PYTHONPATH=.
 extract_french_corpus:
-	@poetry run python proceedings_curation/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(FRENCH_CORPUS_PATH) --tokenizer simple --filter-languages fr
+	@poetry run python proceedings_curation/scripts/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(FRENCH_CORPUS_PATH) --tokenizer simple --filter-languages fr
 .PHONY: extract_french_corpus
