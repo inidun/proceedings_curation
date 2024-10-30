@@ -5,10 +5,10 @@ from proceedings_curation.language_filters.language_filters import LanguageFilte
 
 
 class MockLanguageDetector(LanguageDetector):
-    def __init__(self, possible_languages):
+    def __init__(self, possible_languages: list[str]) -> None:
         self.possible_languages = possible_languages
 
-    def detect(self, text):
+    def detect(self, text: str) -> str | None:
         if "english" in text.lower():
             return "en"
         if "français" in text.lower():
