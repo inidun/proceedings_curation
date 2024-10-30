@@ -63,7 +63,7 @@ def extract_meetings(  # pylint: disable=redefined-outer-name
         'tesseract',
     ],
     default='pdfbox',
-)  # type: ignore
+)
 def main(
     metadata_index: str | os.PathLike[str],
     input_path: str | os.PathLike[str],
