@@ -12,7 +12,7 @@ from pdf_extract.tesseract_extractor import TesseractExtractor
 
 # TODO: Add language as argument
 @dataclass
-class TesseractExtractorMod(TesseractExtractor):
+class TesseractExtractorMod(TesseractExtractor):  # type: ignore[misc]
     """Extract text from PDF files using Tesseract OCR
 
     Args:

@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 @dataclass
-class PDFBoxExtractorMod(PDFBoxExtractor):
+class PDFBoxExtractorMod(PDFBoxExtractor):  # type: ignore[misc]
     def extract_text(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         filename: str | os.PathLike[str],
