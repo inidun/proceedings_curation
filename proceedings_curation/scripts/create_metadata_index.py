@@ -112,7 +112,7 @@ def create_metadata_index(
 
     idx['pages'] = idx['pages_in_pdf'].astype(str).str.strip()
     idx['pages'] = idx['pages'].str.split('-').str.get(0) + '-' + idx['pages'].str.split('-').str.get(-1)
-    if idx['pages'].isnull().sum() > 0: # pragma: no cover
+    if idx['pages'].isnull().sum() > 0:  # pragma: no cover
         raise ValueError("Null values in 'pages' column")
     idx[['first_page', 'last_page']] = idx['pages'].str.split('-', n=1, expand=True).astype('uint16')
 
