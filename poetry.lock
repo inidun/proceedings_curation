@@ -1029,7 +1029,7 @@ tqdm = "^4.64.0"
 type = "git"
 url = "https://github.com/inidun/pdf_extract.git"
 reference = "HEAD"
-resolved_reference = "294b1ea1d625f10df6b48bd1d07d03f462d850af"
+resolved_reference = "0b5bc4aa14ab6e8e2827e368440a2c1ccd734618"
 
 [[package]]
 name = "pdf2image"
