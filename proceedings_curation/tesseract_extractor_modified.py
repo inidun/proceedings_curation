@@ -49,8 +49,8 @@ class TesseractExtractorMod(TesseractExtractor):
 
     def pdf_to_txt(
         self,
-        filename: str | os.PathLike,
-        output_folder: str | os.PathLike,
+        filename: str | os.PathLike[str],
+        output_folder: str | os.PathLike[str],
         first_page: int = 1,
         last_page: int | None = None,
         language: str | None = None,
@@ -92,8 +92,8 @@ class TesseractExtractorMod(TesseractExtractor):
 
     def pdf_to_alto(
         self,
-        filename: str | os.PathLike,
-        output_folder: str | os.PathLike,
+        filename: str | os.PathLike[str],
+        output_folder: str | os.PathLike[str],
         first_page: int = 1,
         last_page: int | None = None,
         language: str | None = None,
@@ -135,8 +135,8 @@ class TesseractExtractorMod(TesseractExtractor):
 
     def pdf_to_hocr(
         self,
-        filename: str | os.PathLike,
-        output_folder: str | os.PathLike,
+        filename: str | os.PathLike[str],
+        output_folder: str | os.PathLike[str],
         first_page: int = 1,
         last_page: int | None = None,
         language: str | None = None,
@@ -179,8 +179,8 @@ class TesseractExtractorMod(TesseractExtractor):
 
     def extract_text(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
-        filename: str | os.PathLike,
-        output_folder: str | os.PathLike,
+        filename: str | os.PathLike[str],
+        output_folder: str | os.PathLike[str],
         first_page: int | None = 1,
         last_page: int | None = None,
         page_numbers: bool = False,

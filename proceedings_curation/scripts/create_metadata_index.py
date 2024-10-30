@@ -6,7 +6,7 @@ from loguru import logger
 
 
 def create_metadata_index(
-    proceedings_index: str | os.PathLike, proceedings_metadata: str | os.PathLike
+    proceedings_index: str | os.PathLike[str], proceedings_metadata: str | os.PathLike[str]
 ) -> pd.DataFrame:
     """Create metadata index by merging and updating `proceedings_index` and `proceedings_metadata`
 
@@ -132,7 +132,7 @@ def create_metadata_index(
     return idx
 
 
-def save_metadata_index(idx: pd.DataFrame, filename: str | os.PathLike) -> None:
+def save_metadata_index(idx: pd.DataFrame, filename: str | os.PathLike[str]) -> None:
     """Save metadata index as Excel or CSV
 
     Args:

@@ -14,8 +14,8 @@ from proceedings_curation.tesseract_extractor_modified import TesseractExtractor
 
 def extract_meetings(  # pylint: disable=redefined-outer-name
     index: pd.DataFrame,
-    input_path: str | os.PathLike,
-    output_path: str | os.PathLike,
+    input_path: str | os.PathLike[str],
+    output_path: str | os.PathLike[str],
     extractor: ITextExtractor,
     page_numbers: bool = False,
     page_sep: str = '',
@@ -65,9 +65,9 @@ def extract_meetings(  # pylint: disable=redefined-outer-name
     default='pdfbox',
 )  # type: ignore
 def main(
-    metadata_index: str | os.PathLike,
-    input_path: str | os.PathLike,
-    output_path: str | os.PathLike,
+    metadata_index: str | os.PathLike[str],
+    input_path: str | os.PathLike[str],
+    output_path: str | os.PathLike[str],
     *,
     extractor: str = 'pdfbox',
     page_numbers: bool = False,
@@ -108,14 +108,14 @@ def main(
     logger.remove(logfile)
 
 
-def check_source_files(input_path: str | os.PathLike, metadata_index: pd.DataFrame) -> None:
+def check_source_files(input_path: str | os.PathLike[str], metadata_index: pd.DataFrame) -> None:
     if len(missing := {file for file in metadata_index.filename.unique() if not (input_path / file).is_file()}) > 0:
         logger.warning(f"{len(missing)} missing source files in {input_path}: {', '.join(missing)}")
     else:
         logger.info(f'Found all source files in {input_path}')
 
 
-def load_index(metadata_index: str | os.PathLike) -> pd.DataFrame:
+def load_index(metadata_index: str | os.PathLike[str]) -> pd.DataFrame:
     logger.info('Loading index')
     index = pd.read_excel(
         metadata_index,

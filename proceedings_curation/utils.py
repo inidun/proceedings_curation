@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 
 
-def extract_text_from_alto(file_path: os.PathLike | str) -> str:
+def extract_text_from_alto(file_path: os.PathLike[str] | str) -> str:
     """Extract text content from an ALTO XML file.
 
     Args:
@@ -30,7 +30,7 @@ def extract_text_from_alto(file_path: os.PathLike | str) -> str:
     return content
 
 
-def extract_text_from_hocr(file_path: os.PathLike | str) -> str:
+def extract_text_from_hocr(file_path: os.PathLike[str] | str) -> str:
     """Extract text content from an HOCR file.
 
     Args:

@@ -14,8 +14,8 @@ from tqdm import tqdm
 class PDFBoxExtractorMod(PDFBoxExtractor):
     def extract_text(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
-        filename: str | os.PathLike,
-        output_folder: str | os.PathLike,
+        filename: str | os.PathLike[str],
+        output_folder: str | os.PathLike[str],
         first_page: int | None = 1,
         last_page: int | None = None,
         page_numbers: bool = False,
