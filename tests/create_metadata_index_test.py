@@ -224,3 +224,161 @@ class TestMainFunction:
             'last_page',
             'language_codes',
         ]
+
+
+class TestCreateMetadataIndexErrors:
+    def test_create_metadata_index_with_invalid_pages_in_pdf(self, tmp_path, proceedings_metadata_file):
+        data = {
+            'Record number': [1, 2],
+            'Session number': ['3X', '4X'],
+            'Pages in doc': ['1-10', '11-20'],
+            'Pages in pdf': ['1-', '11-20'],  # Invalid page range
+            'Date meeting': ['2020-01-01', '2021-01-01'],
+            'Session president': ['President 1', 'President 2'],
+            'Title meeting': ['Meeting 1', 'Meeting 2'],
+            'Chapter': ['A', 'B'],
+            'Languages': ['mul|ara eng', 'eng'],
+            'Document codes': ['Document code 1', 'Document code 2'],
+            'Title': ['Title 1', 'Title 2'],
+            'Titles in other languages': ['Title 1', 'Title 2'],
+            'Publication date': [2020, 2021],
+            'Volume': [1, 2],
+            'Physical description': ['Physical description 1', 'Physical description 2'],
+            'Conference name': ['Conference name 1', 'Conference name 2'],
+            'Conference session': ['Conference session 1', 'Conference session 2'],
+            'Conference location': ['Conference location 1', 'Conference location 2'],
+            'Conference date ': [2020, 2021],
+            'Corporate subject': ['Corporate subject 1', 'Corporate subject 2'],
+            'Variant title': ['Variant title 1', 'Variant title 2'],
+        }
+        df = pd.DataFrame(data)
+        proceedings_index_file = tmp_path / "proceedings_index_invalid_pages_in_pdf.xlsx"
+        df.to_excel(proceedings_index_file, index=False)
+
+        with pytest.raises(ValueError, match="Trailing '-' in 'pages_in_pdf' column"):
+            create_metadata_index(proceedings_index_file, proceedings_metadata_file)
+
+    def test_create_metadata_index_with_invalid_pages_in_doc(self, tmp_path, proceedings_metadata_file):
+        data = {
+            'Record number': [1, 2],
+            'Session number': ['3X', '4X'],
+            'Pages in doc': ['1-', '11-20'],  # Invalid page range
+            'Pages in pdf': ['1-10', '11-20'],
+            'Date meeting': ['2020-01-01', '2021-01-01'],
+            'Session president': ['President 1', 'President 2'],
+            'Title meeting': ['Meeting 1', 'Meeting 2'],
+            'Chapter': ['A', 'B'],
+            'Languages': ['mul|ara eng', 'eng'],
+            'Document codes': ['Document code 1', 'Document code 2'],
+            'Title': ['Title 1', 'Title 2'],
+            'Titles in other languages': ['Title 1', 'Title 2'],
+            'Publication date': [2020, 2021],
+            'Volume': [1, 2],
+            'Physical description': ['Physical description 1', 'Physical description 2'],
+            'Conference name': ['Conference name 1', 'Conference name 2'],
+            'Conference session': ['Conference session 1', 'Conference session 2'],
+            'Conference location': ['Conference location 1', 'Conference location 2'],
+            'Conference date ': [2020, 2021],
+            'Corporate subject': ['Corporate subject 1', 'Corporate subject 2'],
+            'Variant title': ['Variant title 1', 'Variant title 2'],
+        }
+        df = pd.DataFrame(data)
+        proceedings_index_file = tmp_path / "proceedings_index_invalid_pages_in_doc.xlsx"
+        df.to_excel(proceedings_index_file, index=False)
+
+        with pytest.raises(ValueError, match="Trailing '-' in 'pages_in_doc' column"):
+            create_metadata_index(proceedings_index_file, proceedings_metadata_file)
+
+    def test_create_metadata_index_with_null_pages_in_pdf(self, tmp_path, proceedings_metadata_file):
+        data = {
+            'Record number': [1, 2],
+            'Session number': ['3X', '4X'],
+            'Pages in doc': ['1-10', '11-20'],
+            'Pages in pdf': [None, '11-20'],  # Null value in pages_in_pdf
+            'Date meeting': ['2020-01-01', '2021-01-01'],
+            'Session president': ['President 1', 'President 2'],
+            'Title meeting': ['Meeting 1', 'Meeting 2'],
+            'Chapter': ['A', 'B'],
+            'Languages': ['mul|ara eng', 'eng'],
+            'Document codes': ['Document code 1', 'Document code 2'],
+            'Title': ['Title 1', 'Title 2'],
+            'Titles in other languages': ['Title 1', 'Title 2'],
+            'Publication date': [2020, 2021],
+            'Volume': [1, 2],
+            'Physical description': ['Physical description 1', 'Physical description 2'],
+            'Conference name': ['Conference name 1', 'Conference name 2'],
+            'Conference session': ['Conference session 1', 'Conference session 2'],
+            'Conference location': ['Conference location 1', 'Conference location 2'],
+            'Conference date ': [2020, 2021],
+            'Corporate subject': ['Corporate subject 1', 'Corporate subject 2'],
+            'Variant title': ['Variant title 1', 'Variant title 2'],
+        }
+        df = pd.DataFrame(data)
+        proceedings_index_file = tmp_path / "proceedings_index_null_pages.xlsx"
+        df.to_excel(proceedings_index_file, index=False)
+
+        with pytest.raises(ValueError):
+            create_metadata_index(proceedings_index_file, proceedings_metadata_file)
+
+    def test_create_metadata_index_with_last_page_smaller_than_first_page(self, tmp_path, proceedings_metadata_file):
+        data = {
+            'Record number': [1, 2],
+            'Session number': ['3X', '4X'],
+            'Pages in doc': ['1-10', '11-20'],
+            'Pages in pdf': ['10-1', '11-20'],  # Last page smaller than first page
+            'Date meeting': ['2020-01-01', '2021-01-01'],
+            'Session president': ['President 1', 'President 2'],
+            'Title meeting': ['Meeting 1', 'Meeting 2'],
+            'Chapter': ['A', 'B'],
+            'Languages': ['mul|ara eng', 'eng'],
+            'Document codes': ['Document code 1', 'Document code 2'],
+            'Title': ['Title 1', 'Title 2'],
+            'Titles in other languages': ['Title 1', 'Title 2'],
+            'Publication date': [2020, 2021],
+            'Volume': [1, 2],
+            'Physical description': ['Physical description 1', 'Physical description 2'],
+            'Conference name': ['Conference name 1', 'Conference name 2'],
+            'Conference session': ['Conference session 1', 'Conference session 2'],
+            'Conference location': ['Conference location 1', 'Conference location 2'],
+            'Conference date ': [2020, 2021],
+            'Corporate subject': ['Corporate subject 1', 'Corporate subject 2'],
+            'Variant title': ['Variant title 1', 'Variant title 2'],
+        }
+        df = pd.DataFrame(data)
+        proceedings_index_file = tmp_path / "proceedings_index_last_page_smaller.xlsx"
+        df.to_excel(proceedings_index_file, index=False)
+
+        with pytest.raises(ValueError, match="Last page smaller than first page"):
+            create_metadata_index(proceedings_index_file, proceedings_metadata_file)
+
+    def test_create_metadata_index_with_null_pages(self, tmp_path, proceedings_metadata_file):
+        data = {
+            'Record number': [1, 2],
+            'Session number': ['3X', '4X'],
+            'Pages in doc': ['1-10', '11-20'],
+            'Pages in pdf': ['1-10', '11-20'],
+            'Date meeting': ['2020-01-01', '2021-01-01'],
+            'Session president': ['President 1', 'President 2'],
+            'Title meeting': ['Meeting 1', 'Meeting 2'],
+            'Chapter': ['A', 'B'],
+            'Languages': ['mul|ara eng', 'eng'],
+            'Document codes': ['Document code 1', 'Document code 2'],
+            'Title': ['Title 1', 'Title 2'],
+            'Titles in other languages': ['Title 1', 'Title 2'],
+            'Publication date': [2020, 2021],
+            'Volume': [1, 2],
+            'Physical description': ['Physical description 1', 'Physical description 2'],
+            'Conference name': ['Conference name 1', 'Conference name 2'],
+            'Conference session': ['Conference session 1', 'Conference session 2'],
+            'Conference location': ['Conference location 1', 'Conference location 2'],
+            'Conference date ': [2020, 2021],
+            'Corporate subject': ['Corporate subject 1', 'Corporate subject 2'],
+            'Variant title': ['Variant title 1', 'Variant title 2'],
+        }
+        df = pd.DataFrame(data)
+        df.loc[0, 'Pages in pdf'] = None
+        proceedings_index_file = tmp_path / "proceedings_index_null_pages.xlsx"
+        df.to_excel(proceedings_index_file, index=False)
+
+        with pytest.raises(ValueError):
+            create_metadata_index(proceedings_index_file, proceedings_metadata_file)

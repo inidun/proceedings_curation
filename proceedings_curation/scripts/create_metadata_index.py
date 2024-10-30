@@ -38,12 +38,12 @@ def create_metadata_index(
     idxp.columns = idxp.columns.str.strip().str.replace(' ', '_').str.lower()
 
     if idxp['pages_in_pdf'].str.strip().str.endswith('-').fillna(False).any():
-        logger.error(
+        raise ValueError(
             f"Trailing '-' in 'pages_in_pdf' column\n{idxp[idxp['pages_in_pdf'].str.strip().str.endswith('-').fillna(False)]['pages_in_pdf']}"
         )
 
     if idxp['pages_in_doc'].str.strip().str.endswith('-').fillna(False).any():
-        logger.error(
+        raise ValueError(
             f"Trailing '-' in 'pages_in_doc' column\n{idxp[idxp['pages_in_doc'].str.strip().str.endswith('-').fillna(False)]['pages_in_doc']}"
         )
 
@@ -98,8 +98,10 @@ def create_metadata_index(
     idx['volume'] = idx['volume'].replace(-1, pd.NA)
 
     # check that all idx has same length as idxp
-    if len(idx) != len(idxp):
-        logger.error(f'Length of merged index ({len(idx)}) does not match length of proceedings index ({len(idxp)})')
+    if len(idx) != len(idxp):  # pragma: no cover
+        raise ValueError(
+            f'Length of merged index ({len(idx)}) does not match length of proceedings index ({len(idxp)})'
+        )
 
     # fmt: off
     idx['meeting_name_id'] = idx['record_number'].astype(str) + '_' + idx['title_meeting'].str.replace(' ', '_').str.lower()
@@ -110,12 +112,12 @@ def create_metadata_index(
 
     idx['pages'] = idx['pages_in_pdf'].astype(str).str.strip()
     idx['pages'] = idx['pages'].str.split('-').str.get(0) + '-' + idx['pages'].str.split('-').str.get(-1)
-    if idx['pages'].isnull().sum() > 0:
-        logger.warning("Null values in 'pages' column")
+    if idx['pages'].isnull().sum() > 0: # pragma: no cover
+        raise ValueError("Null values in 'pages' column")
     idx[['first_page', 'last_page']] = idx['pages'].str.split('-', n=1, expand=True).astype('uint16')
 
     if (idx['last_page'] < idx['first_page']).any():
-        logger.error(
+        raise ValueError(
             f"Last page smaller than first page\n{idx[idx['last_page'] < idx['first_page']][['record_number', 'title_meeting', 'pages']]}"
         )
 
