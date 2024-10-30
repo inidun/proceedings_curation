@@ -116,5 +116,5 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     typer.run(main)
