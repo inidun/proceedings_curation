@@ -1,6 +1,6 @@
 import pytest
 
-from proceedings_curation.utils import extract_text_from_alto, extract_text_from_hocr
+from proceedings_curation.extractors.utils import extract_text_from_alto, extract_text_from_hocr
 
 # Sample ALTO XML content for testing
 alto_xml_content = """<?xml version="1.0" encoding="UTF-8"?>

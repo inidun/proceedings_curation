@@ -5,7 +5,7 @@ import pytest
 from fpdf import FPDF
 
 from proceedings_curation.extractors.tesseract_extractor_modified import TesseractExtractorMod
-from proceedings_curation.utils import extract_text_from_alto, extract_text_from_hocr
+from proceedings_curation.extractors.utils import extract_text_from_alto, extract_text_from_hocr
 
 
 def test_tesseract_language_support():
