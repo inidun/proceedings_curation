@@ -3,9 +3,8 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
-from proceedings_curation.pdfbox_extractor_modified import PDFBoxExtractorMod
+from proceedings_curation.extractors import PDFBoxExtractorMod, TesseractExtractorMod
 from proceedings_curation.scripts.extract_meetings import check_source_files, extract_meetings, load_index, main
-from proceedings_curation.tesseract_extractor_modified import TesseractExtractorMod
 
 
 @pytest.fixture(name="metadata_index")

@@ -8,8 +8,7 @@ from argh import arg
 from loguru import logger
 from pdf_extract.interface import ITextExtractor
 
-from proceedings_curation.pdfbox_extractor_modified import PDFBoxExtractorMod
-from proceedings_curation.tesseract_extractor_modified import TesseractExtractorMod
+from proceedings_curation.extractors import PDFBoxExtractorMod, TesseractExtractorMod
 
 
 def extract_meetings(  # pylint: disable=redefined-outer-name

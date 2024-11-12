@@ -3,7 +3,7 @@ import logging
 import pytest
 from fpdf import FPDF
 
-from proceedings_curation.pdfbox_extractor_modified import PDFBoxExtractorMod
+from proceedings_curation.extractors.pdfbox_extractor_modified import PDFBoxExtractorMod
 
 
 @pytest.fixture(name='text_content')
