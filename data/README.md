@@ -1,5 +1,21 @@
+## Metadata creation workflow
 
-# Proceedings
+```mermaid
+graph LR
+    subgraph source
+        A[proceedings_index.xlsx]
+        B[proceedings_metadata.xlsx]
+    end
+    A-->C
+    B-->C
+    C[create_metadata_index.py]-->output
+    subgraph output
+        D[metadata_index.csv]
+        E[metadata_index.xlsx]
+    end
+```
+
+## List of Proceedings
 
 | Conference Date | Title                                                                                                                                        | Note      |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
