@@ -21,6 +21,18 @@ def process_files(
     keep_undetected: bool = False,
     force_overwrite: bool = False,
 ) -> None:
+    """Process text files in a folder by tokenizing paragraphs, detecting languages, and filtering paragraphs based on language. Save filtered paragraphs to a new folder with the same filenames. Optionally, keep paragraphs with undetected languages. Optionally, overwrite existing files. Log information about the process.
+
+    Args:
+        input_folder (str): Path to folder with text files
+        output_folder (str): Path to save filtered text files
+        tokenizer (str): Tokenizer to use
+        possible_languages (list[str] | None): Possible languages to consider
+        filter_languages (str | list[str]): Languages to keep
+        language_detector (str, optional): Language detector to use. Defaults to "langdetect".
+        keep_undetected (bool, optional): Keep paragraphs with undetected languages. Defaults to False.
+        force_overwrite (bool, optional): Overwrite existing files. Defaults to False.
+    """
     loguru.logger.info(f"Processing files in {input_folder.replace(os.path.expanduser('~'), '~')}")
     text_files = sorted([filename for filename in os.listdir(input_folder) if filename.endswith('.txt')])
     loguru.logger.info(f"Number of files: {len(text_files)}")
@@ -89,7 +101,19 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     force_overwrite: bool = False,
     logging_levels: list[str] = ['INFO', 'WARNING', 'DEBUG'],
 ) -> None:
+    """Process text files in a folder by tokenizing paragraphs, detecting languages, and filtering paragraphs based on language. Save filtered paragraphs to a new folder with the same filenames. Optionally, keep paragraphs with undetected languages. Optionally, overwrite existing files. Log information about the process.
 
+    Args:
+        input_folder (str): Folder with text files
+        output_folder (str): Folder to save filtered text files
+        tokenizer (str, optional): Tokenizer to use. Defaults to 'nltk'.
+        possible_languages (list[str] | None, optional): Possible languages to consider. Defaults to None.
+        filter_languages (Annotated[list[str], typer.Option()], optional): Languages to keep. Defaults to ['en'].
+        language_detector (str, optional): Language detector to use. Defaults to "langdetect".
+        keep_undetected (bool, optional): Keep paragraphs with undetected languages. Defaults to False.
+        force_overwrite (bool, optional): Overwrite existing files. Defaults to False.
+        logging_levels (list[str], optional): Logging levels. Defaults to ['INFO', 'WARNING', 'DEBUG'].
+    """
     # filter_languages = [lang.value for lang in filter_languages]
 
     os.makedirs(output_folder, exist_ok=True)
