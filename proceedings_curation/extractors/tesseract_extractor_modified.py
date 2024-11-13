@@ -34,6 +34,7 @@ class TesseractExtractorMod(TesseractExtractor):  # type: ignore[misc]
     tessdata: str | None = os.getenv('TESSDATA_PREFIX')
 
     def __post_init__(self) -> None:
+        """Set tessdata directory if available"""
         if self.tessdata:
             self.tesseract_config += f' --tessdata-dir {self.tessdata}'
 

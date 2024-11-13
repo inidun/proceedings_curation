@@ -12,6 +12,7 @@ from tqdm import tqdm
 
 @dataclass
 class PDFBoxExtractorMod(PDFBoxExtractor):  # type: ignore[misc]
+    """Extract text from PDF files using Apache PDFBox"""
     def extract_text(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         filename: str | os.PathLike[str],
@@ -23,7 +24,7 @@ class PDFBoxExtractorMod(PDFBoxExtractor):  # type: ignore[misc]
         output_filename: str | None = None,
         force: bool = False,
     ) -> None:
-        """Extract text from PDF files
+        """Extract text from PDF files. Uses Apache PDFBox to extract text from PDF files. The extracted text is saved to a text file.
 
         Args:
             filename (str | os.PathLike): Path to PDF file
