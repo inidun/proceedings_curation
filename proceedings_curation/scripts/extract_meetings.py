@@ -108,6 +108,12 @@ def main(
 
 
 def check_source_files(input_path: str | os.PathLike[str], metadata_index: pd.DataFrame) -> None:
+    """Check if all source files are present in the input path
+
+    Args:
+        input_path (str | os.PathLike[str]): Path to source files
+        metadata_index (pd.DataFrame): Metadata index with filenames
+    """
     if len(missing := {file for file in metadata_index.filename.unique() if not (input_path / file).is_file()}) > 0:
         logger.warning(f"{len(missing)} missing source files in {input_path}: {', '.join(missing)}")
     else:
@@ -115,6 +121,14 @@ def check_source_files(input_path: str | os.PathLike[str], metadata_index: pd.Da
 
 
 def load_index(metadata_index: str | os.PathLike[str]) -> pd.DataFrame:
+    """Load metadata index
+
+    Args:
+        metadata_index (str | os.PathLike[str]): Path to metadata index
+
+    Returns:
+        pd.DataFrame: Metadata index
+    """
     logger.info('Loading index')
     index = pd.read_excel(
         metadata_index,
