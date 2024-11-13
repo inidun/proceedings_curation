@@ -13,6 +13,7 @@ from tqdm import tqdm
 @dataclass
 class PDFBoxExtractorMod(PDFBoxExtractor):  # type: ignore[misc]
     """Extract text from PDF files using Apache PDFBox"""
+
     def extract_text(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         filename: str | os.PathLike[str],
