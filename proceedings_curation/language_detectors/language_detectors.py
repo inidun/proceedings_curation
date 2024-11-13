@@ -10,6 +10,8 @@ DetectorFactory.seed = 0  # Necessary for deterministic results
 
 
 class LanguageDetector:
+    """Base class for language detectors."""
+
     def __init__(self) -> None:
         pass
 
@@ -18,6 +20,8 @@ class LanguageDetector:
 
 
 class LangDetect(LanguageDetector):
+    """Language detector using langdetect library."""
+
     def __init__(self, **kwargs) -> None:  # type: ignore[no-untyped-def]
         super().__init__()
         self.options = kwargs
@@ -25,6 +29,14 @@ class LangDetect(LanguageDetector):
         self.threshold = kwargs.get("threshold", None)
 
     def detect(self, text: str) -> str | None:
+        """Detect language of a text. If possible_languages is set, only those languages will be considered. If threshold is set, only languages with a probability higher than the threshold will be considered. If both possible_languages and threshold are set, both conditions must be met. If no language is detected, None is returned.
+
+        Args:
+            text (str): Text to detect language
+
+        Returns:
+            str | None: Detected language or None if language could not be detected
+        """
         try:
             if self.threshold is None:
                 detections = [
@@ -45,8 +57,18 @@ class LangDetect(LanguageDetector):
 
 
 class LanguageDetectorFactory:
+    """Factory class for language detectors."""
+
     @staticmethod
     def get_language_detector(detector: str, **kwargs) -> LanguageDetector:  # type: ignore[no-untyped-def]
+        """Get a language detector.
+
+        Raises:
+            ValueError: If an invalid language detector is provided
+
+        Returns:
+            LanguageDetector: Language detector
+        """
         if detector == "langdetect":
             return LangDetect(**kwargs)
 
