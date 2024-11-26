@@ -16,6 +16,17 @@ class LanguageDetector:
         pass
 
     def detect(self, text: str) -> str | None:
+        """Detect language of a text.
+
+        Args:
+            text (str): Text to detect language
+
+        Raises:
+            NotImplementedError: NotImplementedError is raised if the method is not implemented
+
+        Returns:
+            str | None: Detected language or None if language could not be detected
+        """
         raise NotImplementedError("Detect method must be implemented")
 
 
