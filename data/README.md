@@ -1,3 +1,61 @@
+## Metadata files
+
+
+### `source/proceedings_index.xlsx`
+Curated index of proceedings. Contains information about meetings. Includes the following information:
+
+- Record number
+- Session number
+- Pages in doc
+- Pages in pdf
+- Date meeting
+- Session president
+- Title meeting
+- Chapter
+- Languages
+- Document codes
+- Title
+- Titles in other languages
+- Publication date
+- Volume
+- Physical description
+- Conference name
+- Conference session
+- Conference location
+- Conference date
+- Corporate subject
+- Variant title
+
+### `source/proceedings_metadata.xlsx`
+A review of proceeding files. Includes the following information:
+
+- record_number
+- city
+- year
+- filename
+- has_text
+- extractable
+- page_numbers
+- pdf_page_numbers
+- languages
+- born_digital
+- primary_language
+- columns
+- toc_pages
+- header_session
+- header_session_part
+- header_02
+- start_of_speech
+- start_of_paragraph
+- start_of_translation
+- notes
+- volume
+
+### `metadata_index.xlsx` and `metadata_index.csv`
+
+Metadata index created by merging `source/proceedings_index.xlsx` and `source/proceedings_metadata.xlsx` using the `create_metadata_index.py` script.
+
+
 ## Metadata creation workflow
 
 ```mermaid
