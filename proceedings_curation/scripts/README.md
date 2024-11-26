@@ -107,7 +107,7 @@ python extract_language_subset.py --tokenizer nltk --possible_languages '["en", 
 This example command processes text files in the `input_folder`, tokenizes paragraphs using the `nltk` tokenizer, considers English, French, and German as possible languages, keeps only English and French paragraphs, uses the `langdetect` language detector, keeps paragraphs with undetected languages, and overwrites existing files in the `output_folder`.
 
 
-## extract_meetings.py
+## `extract_meetings.py`
 
 The `extract_meetings.py` script uses a metadata index to extract text from a folder of text files and saves the extracted data into a structured format.
 
