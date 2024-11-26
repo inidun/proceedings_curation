@@ -14,8 +14,8 @@ def test_tesseract_language_support():
 
 
 def test_tesseract_version():
-    assert pytesseract.get_tesseract_version().release >= (5, 4, 0)
-    assert pytesseract.get_tesseract_version().public == '5.4.1'
+    assert pytesseract.get_tesseract_version().release >= (5, 5, 0)
+    assert pytesseract.get_tesseract_version().public == '5.5.0'
 
 
 @pytest.fixture(name='text_content')
