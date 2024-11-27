@@ -93,13 +93,12 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     input_folder: str,
     output_folder: str,
     tokenizer: str = 'nltk',
-    possible_languages: list[str] | None = None,  # = ['en', 'ar', 'zh', 'fr', 'ru', 'es'],
-    # filter_languages: Annotated[List[FilterLanguages], typer.Option()] = [FilterLanguages.en, FilterLanguages.fr],
-    filter_languages: Annotated[list[str], typer.Option()] = ['en'],
+    possible_languages: list[str] | None = None,
+    filter_languages: Annotated[list[str], typer.Option()] | None = None,
     language_detector: str = "langdetect",
     keep_undetected: bool = False,
     force_overwrite: bool = False,
-    logging_levels: list[str] = ['INFO', 'WARNING', 'DEBUG'],
+    logging_levels: list[str] | None = None,
 ) -> None:
     """Process text files in a folder by tokenizing paragraphs, detecting languages, and filtering paragraphs based on language. Save filtered paragraphs to a new folder with the same filenames. Optionally, keep paragraphs with undetected languages. Optionally, overwrite existing files. Log information about the process.
 
@@ -114,7 +113,11 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         force_overwrite (bool, optional): Overwrite existing files. Defaults to False.
         logging_levels (list[str], optional): Logging levels. Defaults to ['INFO', 'WARNING', 'DEBUG'].
     """
-    # filter_languages = [lang.value for lang in filter_languages]
+
+    if filter_languages is None:
+        filter_languages = ['en']
+    if logging_levels is None:
+        logging_levels = ['INFO', 'WARNING', 'DEBUG']
 
     os.makedirs(output_folder, exist_ok=True)
 
