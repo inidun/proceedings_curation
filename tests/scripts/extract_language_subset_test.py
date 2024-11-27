@@ -285,3 +285,79 @@ class TestMainFunction:
         assert "Number of paragraphs kept: " in caplog.text
         assert "Percentage of paragraphs kept: " in caplog.text
         assert f"Files saved in {output_folder}" in caplog.text
+
+    def test_main_function_when_filter_languages_is_none_defaults_to_english(self, input_folder, output_folder):
+        result = runner.invoke(
+            app,
+            [
+                input_folder,
+                output_folder,
+                "--tokenizer",
+                "nltk",
+                "--possible-languages",
+                "en",
+                "--possible-languages",
+                "es",
+                "--language-detector",
+                "langdetect",
+                "--no-keep-undetected",
+                "--no-force-overwrite",
+                "--logging-levels",
+                "INFO",
+                "--logging-levels",
+                "WARNING",
+            ],
+        )
+        assert result.exit_code == 0
+        assert os.path.exists(os.path.join(output_folder, "file1.txt"))
+        assert os.path.exists(os.path.join(output_folder, "file2.txt"))
+
+        with open(os.path.join(output_folder, "file1.txt"), 'r', encoding='utf-8') as file:
+            content = file.read()
+            assert "This is a test file." in content
+            assert "It contains multiple lines" in content
+            assert "Some of them are in English." in content
+
+        with open(os.path.join(output_folder, "file2.txt"), 'r', encoding='utf-8') as file:
+            content = file.read()
+            assert content == ""
+
+    def test_main_function_when_logging_levels_is_none_uses_default_levels(self, input_folder, output_folder, caplog):
+        result = runner.invoke(
+            app,
+            [
+                input_folder,
+                output_folder,
+                "--tokenizer",
+                "nltk",
+                "--possible-languages",
+                "en",
+                "--possible-languages",
+                "es",
+                "--filter-languages",
+                "en",
+                "--filter-languages",
+                "zh",
+                "--language-detector",
+                "langdetect",
+                "--no-keep-undetected",
+                "--no-force-overwrite",
+            ],
+        )
+        assert result.exit_code == 0
+        assert f"Processing files in {input_folder}" in caplog.text
+        assert f"Number of files: {len(os.listdir(input_folder))}" in caplog.text
+        assert "Using tokenizer: " in caplog.text
+        assert "Using language detector: " in caplog.text
+        assert "Keeping languages: " in caplog.text
+        assert "Keeping undetected paragraphs: " in caplog.text
+        assert "Processing " in caplog.text
+        assert "Number of lines: " in caplog.text
+        assert "Number of paragraphs: " in caplog.text
+        assert "Number of paragraphs kept: " in caplog.text
+        assert "Percentage of paragraphs kept: " in caplog.text
+        assert f"Files saved in {output_folder}" in caplog.text
+
+        assert os.path.exists(os.path.join(output_folder, "info.log"))
+        assert os.path.exists(os.path.join(output_folder, "debug.log"))
+        assert os.path.exists(os.path.join(output_folder, "warning.log"))
