@@ -136,4 +136,4 @@ extract_meetings.py [OPTIONS] METADATA_INDEX INPUT_PATH OUTPUT_PATH
 python extract_meetings.py --extractor tesseract --page_numbers --page_sep '\n' --force metadata_index.csv input_texts/ output_folder/
 ```
 
-This example command processes the text files in the `input_texts/` folder using the `tesseract` extractor, includes page numbers in the extracted output, uses a newline character as the page separator, forces overwriting of existing files, and saves the extracted meeting information to the `output_folder/`
+This example command processes the text files in the `input_texts/` folder using the `tesseract` extractor, includes page numbers in the extracted output, uses a newline character as the page separator, forces overwriting of existing files, and saves the extracted meeting information to the `output_folder/`.
