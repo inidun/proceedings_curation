@@ -102,3 +102,8 @@ extract_french_corpus: export PYTHONPATH=.
 extract_french_corpus:
 	@poetry run python proceedings_curation/scripts/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(FRENCH_CORPUS_PATH) --tokenizer simple --filter-languages fr
 .PHONY: extract_french_corpus
+
+extract_french_and_english_corpus: export PYTHONPATH=.
+extract_french_and_english_corpus:
+	@poetry run python proceedings_curation/scripts/extract_language_subset.py $(PROCEEDINGS_MEETINGS_CORPUS_PATH) $(FRE_ENG_CORPUS_PATH) --tokenizer simple --filter-languages fr --filter-languages en
+.PHONY: extract_french_and_english_corpus
