@@ -174,3 +174,4 @@ notes/
 ~$*
 *Zone.Identifier
 *.out
+.sdkmanrc
