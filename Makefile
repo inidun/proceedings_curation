@@ -46,15 +46,15 @@ data: nltk_data
 .PHONY: data
 
 test:
-	@poetry run pytest tests/
+	@JAVA_HOME=$(JAVA_HOME) poetry run pytest tests/
 .PHONY: test
 
 retest:
-	@poetry run pytest --last-failed tests/
+	@JAVA_HOME=$(JAVA_HOME) poetry run pytest --last-failed tests/
 .PHONY: retest
 
 coverage:
-	@poetry run pytest --cov=$(PACKAGE_FOLDER) --cov-report=html tests/
+	@JAVA_HOME=$(JAVA_HOME) poetry run pytest --cov=$(PACKAGE_FOLDER) --cov-report=html tests/
 
 clean:
 	@rm -rf .coverage htmlcov
@@ -112,3 +112,6 @@ word_count: export PYTHONPATH=.
 word_count:
 	@poetry run python proceedings_curation/scripts/word_count.py --language "english" $(MEETINGS_DATA)/meetings_eng.zip $(MEETINGS_DATA)/meetings_eng_word_count.csv
 	@poetry run python proceedings_curation/scripts/word_count.py --language "french" $(MEETINGS_DATA)/meetings_fre.zip $(MEETINGS_DATA)/meetings_fre_word_count.csv
+.PHONY: word_count
+
+
