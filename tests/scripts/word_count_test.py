@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 
-from proceedings_curation.scripts.word_count import export_csv, get_fileinfo
+from proceedings_curation.scripts.word_count import export_csv, get_fileinfo, main
 
 
 @pytest.fixture(name='mock_zipfile')
@@ -44,3 +44,19 @@ def test_export_csv():
         mocked_file().write.assert_any_call('filename,tokens_wc,tokens_re,filesize\n')
         mocked_file().write.assert_any_call('file1.txt,5,6,100\n')
         mocked_file().write.assert_any_call('file2.txt,3,4,100\n')
+
+
+def test_main(mock_zipfile):
+    mock_zipfile.namelist.return_value = ['file1.txt', 'file2.txt']
+    mock_zipfile.getinfo.side_effect = lambda name: MagicMock(file_size=100)
+    mock_zipfile.open.side_effect = [
+        mock_open(read_data=b'This is a test file.').return_value,
+        mock_open(read_data=b'Another test file.').return_value,
+    ]
+
+    with patch('builtins.open', mock_open()) as mocked_file:
+        main('dummy.zip', 'output.csv')
+
+        mocked_file().write.assert_any_call('filename,tokens_wc,tokens_re,filesize\n')
+        mocked_file().write.assert_any_call('file1.txt,6,6,100\n')
+        mocked_file().write.assert_any_call('file2.txt,4,4,100\n')
