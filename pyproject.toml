@@ -21,8 +21,8 @@ xlsxwriter = "^3.1.9"
 
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1.1"
-isort = "^5.12.0"
+black = "^25.1.0"
+isort = "^6.0.1"
 mypy = "^1.7.0"
 pylint = "^3.0.2"
 pytest-cov = "^6.0.0"
